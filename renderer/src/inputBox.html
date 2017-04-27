@@ -1,10 +1,6 @@
 <html>
     <head>
         <link rel="stylesheet" href="style.css">
-        <script>
-         window.nodeRequire = window.require;
-         delete window.require;
-        </script>
         <script src="deps/systemjs/system.js"></script>
         <script>
          SystemJS.config({
@@ -21,7 +17,7 @@
          });
         </script>
     </head>
-    <body class="overflow-hidden">
+    <body class="overflow-hidden.bg--none">
         <script>
          SystemJS.import('./inputBox.js');
         </script>

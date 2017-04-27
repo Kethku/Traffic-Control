@@ -10,6 +10,7 @@
     "@types/mithril": "^1.1.1",
     "@types/node": "^7.0.14",
     "del": "^2.2.2",
+    "electron": "^1.6.6",
     "gulp": "^3.9.1",
     "gulp-electron": "^0.1.3",
     "gulp-sass": "^3.1.0",

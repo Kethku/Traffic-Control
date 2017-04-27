@@ -11,7 +11,7 @@ var electronPath = require('electron');
 var mainProject = ts.createProject('tsconfig.json');
 var rendererProject = ts.createProject('renderer/tsconfig.json');
 
-let electron;
+var electron;
 
 gulp.task('clean-main', () => {
   del([

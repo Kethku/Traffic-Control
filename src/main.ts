@@ -4,22 +4,30 @@ import * as url from 'url';
 
 let inputBoxWindow: Electron.BrowserWindow;
 
-function closeInputBox() {
-  if (inputBoxWindow != null) {
-    inputBoxWindow.destroy();
-    inputBoxWindow = null;
-  }
+function hideInputBox() {
+  inputBoxWindow.hide();
+}
+
+function showInputBox() {
+  let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  inputBoxWindow.setBounds({
+    width: display.bounds.width,
+    height: display.bounds.height,
+    x: display.bounds.x,
+    y: display.bounds.y
+  });
+  inputBoxWindow.show();
 }
 
 function createInputBox() {
-  closeInputBox();
-  let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-  let cx = display.bounds.x + display.bounds.width / 2;
-  let cy = display.bounds.y + display.bounds.height / 2;
-  let width = display.bounds.width * 0.8;
-  let height = display.bounds.height;
-
-  inputBoxWindow = new BrowserWindow({width: width, height: height * 3 / 4, frame: false, transparent: true, x: cx - (width / 2), y: cy - (height * 3 / 8)});
+  inputBoxWindow = new BrowserWindow({
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    show: false,
+    thickFrame: true
+  });
 
   inputBoxWindow.loadURL(url.format({
     pathname: path.join(__dirname, "../renderer/build", 'inputBox.html'),
@@ -32,25 +40,16 @@ function createInputBox() {
 
   inputBoxWindow.on('blur', () => {
     if (!inputBoxWindow.webContents.isDevToolsFocused()) {
-      closeInputBox();
+      hideInputBox();
     }
   });
 
-  inputBoxWindow.on('closed', closeInputBox);
+  inputBoxWindow.on('closed', hideInputBox);
 }
-
-ipcMain.on("", (args) => {
-
-});
 
 function setup() {
-  globalShortcut.register('Alt+`', () => {
-    createInputBox();
-  });
+  createInputBox();
+  globalShortcut.register('Alt+Space', showInputBox);
 }
 
-
 app.on('ready', setup);
-app.on('window-all-closed', () => {
-
-})
