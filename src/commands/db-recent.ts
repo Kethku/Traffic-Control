@@ -1,5 +1,5 @@
-import pouchManager from "./pouchManager";
-import outputManager from "./outputManager";
+import pouchManager from "../pouchManager";
+import outputManager from "../outputManager";
 
 export async function recent(countArg?: string, options?: any) {
     let count = 10;

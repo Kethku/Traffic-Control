@@ -2,12 +2,12 @@ import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "js-yaml";
 import * as moment from "moment";
-import asyncUtils from "./async-utils";
-import pouchManager from "./pouchManager";
-import outputManager from "./outputManager";
-import settingsManager from "./settingsManager";
-import indexManager from "./indexManager";
-import docUtils from "./docUtils";
+import asyncUtils from "../async-utils";
+import pouchManager from "../pouchManager";
+import outputManager from "../outputManager";
+import settingsManager from "../settingsManager";
+import indexManager from "../indexManager";
+import docUtils from "../docUtils";
 
 export async function archive(path?: string) {
     let settings = await settingsManager.getSettings();

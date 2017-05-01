@@ -1,6 +1,6 @@
 import * as yaml from "js-yaml";
 import * as path from "path";
-import {archive} from "./db-archive";
+import {archive} from "./commands/db-archive";
 import asyncUtils from "./async-utils";
 import settingsManager from "./settingsManager";
 import docUtils from "./docUtils";

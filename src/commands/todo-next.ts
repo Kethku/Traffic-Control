@@ -1,5 +1,5 @@
-import pouchManager from "./pouchManager";
-import outputManager from "./outputManager";
+import pouchManager from "../pouchManager";
+import outputManager from "../outputManager";
 
 import * as chrono from "chrono-node";
 import * as moment from "moment";

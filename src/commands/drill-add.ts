@@ -1,7 +1,6 @@
 import * as moment from "moment";
-import {question as askQuestion, close} from "./inputManager";
-import pouchManager from "./pouchManager";
-import indexManager from "./indexManager";
+import pouchManager from "../pouchManager";
+import indexManager from "../indexManager";
 
 export async function add(question?: string, answer?: string, category?: string) {
     let q = question;
@@ -10,16 +9,16 @@ export async function add(question?: string, answer?: string, category?: string)
 
     let contString = "";
     do {
-        if (!question) {
-            q = await askQuestion("question:");
-        }
-        if (!answer) {
-            a = await askQuestion("answer:");
-        }
-        if (!category) {
-            c = await askQuestion("category:");
-        }
-        contString = await askQuestion("correct?:");
+        // if (!question) {
+        //     q = await askQuestion("question:");
+        // }
+        // if (!answer) {
+        //     a = await askQuestion("answer:");
+        // }
+        // if (!category) {
+        //     c = await askQuestion("category:");
+        // }
+        // contString = await askQuestion("correct?:");
         question = undefined;
         answer = undefined;
         category = undefined;

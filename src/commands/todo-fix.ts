@@ -1,8 +1,8 @@
 import * as moment from "moment";
 import * as chrono from "chrono-node";
 
-import pouchManager from "./pouchManager";
-import outputManager from "./outputManager";
+import pouchManager from "../pouchManager";
+import outputManager from "../outputManager";
 import {parseEffort} from "./todo-next";
 
 function dateNeedsUpdated(doc: any, id: string) {

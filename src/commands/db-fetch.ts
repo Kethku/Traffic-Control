@@ -1,5 +1,5 @@
-import pouchManager from "./pouchManager";
-import outputManager from "./outputManager";
+import pouchManager from "../pouchManager";
+import outputManager from "../outputManager";
 
 export async function fetch(id: string, options: any) {
     let db = await pouchManager.getLocalDb();

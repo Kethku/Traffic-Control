@@ -1,8 +1,8 @@
 import * as yaml from "js-yaml";
 
-import pouchManager from "./pouchManager";
-import docUtils from "./docUtils"
-import utils from "./utils";
+import pouchManager from "../pouchManager";
+import docUtils from "../docUtils"
+import utils from "../utils";
 
 export async function update(patch: string, index: number,  options: any) {
     if (!index) {

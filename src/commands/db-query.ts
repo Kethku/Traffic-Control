@@ -1,9 +1,9 @@
 import * as pouchdb from "pouchdb";
 import * as yaml from "js-yaml";
-import pouchManager from "./pouchManager";
-import settingsManager from "./settingsManager";
-import outputManager from "./outputManager";
-import indexManager from "./indexManager";
+import pouchManager from "../pouchManager";
+import settingsManager from "../settingsManager";
+import outputManager from "../outputManager";
+import indexManager from "../indexManager";
 
 export async function query(query: string, options: any) {
     let db = await pouchManager.getLocalDb();

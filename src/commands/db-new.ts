@@ -2,9 +2,9 @@ import * as moment from "moment";
 import * as yaml from "js-yaml";
 import {exec} from "child_process"
 import {archive} from "./db-archive";
-import asyncUtils from "./async-utils";
-import settingsManager from "./settingsManager";
-import editorManager from "./editorManager";
+import asyncUtils from "../async-utils";
+import settingsManager from "../settingsManager";
+import editorManager from "../editorManager";
 
 export async function newEntry(tag?: string | number) {
     let settings = await settingsManager.getSettings();
