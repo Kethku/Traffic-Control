@@ -2,7 +2,12 @@ import {BrowserWindow, screen, ipcMain} from "electron";
 import * as path from 'path';
 import * as url from 'url';
 
+import {EventManager1, PollManager1} from "./eventManager";
+
 let inputBoxWindow: Electron.BrowserWindow;
+
+export var InputRecieved = new EventManager1<string>();
+export var ProduceCompletions = new PollManager1<string, string>();
 
 export function closeInputBox() {
   if (inputBoxWindow) {
@@ -46,5 +51,5 @@ export function createInputBox() {
 
 ipcMain.on('hideInputBox', closeInputBox);
 ipcMain.on('inputBoxChanged', (event, currentText) => {
-  event.sender.send('completions', [currentText]);
+  event.sender.send('completions', ["1", "2", "3"]);
 });

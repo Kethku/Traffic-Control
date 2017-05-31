@@ -3,6 +3,7 @@
     "target": "es5",
     "module": "System",
     "noImplicitAny": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "skipLibCheck": true
   }
 }

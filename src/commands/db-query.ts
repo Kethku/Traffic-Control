@@ -2,7 +2,6 @@ import * as pouchdb from "pouchdb";
 import * as yaml from "js-yaml";
 import pouchManager from "../pouchManager";
 import settingsManager from "../settingsManager";
-import outputManager from "../outputManager";
 import indexManager from "../indexManager";
 
 export async function query(query: string, options: any) {
@@ -19,7 +18,6 @@ export async function query(query: string, options: any) {
         } else {
             console.log("Querying...");
             let results = await db.find({ selector: queryObj });
-            await outputManager.outputResults(results.docs, options.output, options.all, options.edit);
         }
     } catch (err) {
         console.log(err);
@@ -43,7 +41,6 @@ export async function search(query: string, options: any) {
         selector["_id"] = { $lt: "A" };
         docs = docs.concat((await db.find({ selector: selector})).docs);
         docs = docs.filter((doc) => doc["_id"] < "A")
-        await outputManager.outputResults(docs, options.output, options.all, options.edit);
     } catch (err) {
         console.error(err);
     }

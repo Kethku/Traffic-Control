@@ -4,7 +4,6 @@ import * as yaml from "js-yaml";
 import * as moment from "moment";
 import asyncUtils from "../async-utils";
 import pouchManager from "../pouchManager";
-import outputManager from "../outputManager";
 import settingsManager from "../settingsManager";
 import indexManager from "../indexManager";
 import docUtils from "../docUtils";
