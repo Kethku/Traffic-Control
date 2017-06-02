@@ -28,7 +28,7 @@ export async function add(question?: string, answer?: string, category?: string)
     close();
 
     try {
-        let db = await pouchManager.getLocalDb();
+        let db = await pouchManager.getDb();
         let card = {
             _id: moment.now().toString(),
             q: q,

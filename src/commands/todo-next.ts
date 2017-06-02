@@ -7,7 +7,7 @@ let productiveTimePerDay = 300;
 
 export async function next(timeAvailable: string, options: any) {
   try {
-    let db = await pouchManager.getLocalDb();
+    let db = await pouchManager.getDb();
     let findResults = await db.find({
       selector: { $and: [
         { todo: { $exists: true } },

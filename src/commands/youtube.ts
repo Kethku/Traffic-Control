@@ -2,7 +2,7 @@ import {BrowserWindow, screen, ipcMain} from "electron";
 import * as path from 'path';
 import * as url from 'url';
 
-import {InputRecieved, ProduceCompletions} from "./inputBox";
+import {InputRecieved, ProduceCompletions} from "../inputBox";
 
 let youtubeWindow: Electron.BrowserWindow;
 
@@ -38,7 +38,7 @@ export function createYoutubePlayer(youtubeUrl: string) {
 
     youtubeWindow.on("ready-to-show", () => {
       let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-      let width = Math.floor(display.bounds.width * 0.33);
+      let width = Math.floor(display.bounds.width * 0.25);
       let height = Math.floor(width * 0.5625);
       let bounds = {
         x: display.bounds.x + display.bounds.width - width - 25,
@@ -54,7 +54,7 @@ export function createYoutubePlayer(youtubeUrl: string) {
 export default function setup() {
   ProduceCompletions.Subscribe((text) => {
     if ("youtube ".indexOf(text) != -1 || "yt".indexOf(text) != -1) {
-      return "yt ";
+      return "yt {Youtube Video URL}";
     }
   });
 

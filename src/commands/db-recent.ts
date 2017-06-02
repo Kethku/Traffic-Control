@@ -6,7 +6,7 @@ export async function recent(countArg?: string, options?: any) {
     count = parseInt(countArg)
   }
   try {
-    let db = await pouchManager.getLocalDb();
+    let db = await pouchManager.getDb();
     console.log("Fetching " + count + " most recent...");
     let results = await db.find({
       selector: {

@@ -3,7 +3,7 @@ import pouchManager from "./pouchManager";
 export module IndexManager {
     let defaultIndexes = [ "modified", "todo", "note" ];
     export async function updateIndexedFields(doc: any) {
-        let db = await pouchManager.getLocalDb();
+        let db = await pouchManager.getDb();
 
         let indexesDocument: any;
         try {
@@ -41,7 +41,7 @@ export module IndexManager {
     export async function indexAll() {
         console.log("Indexing...")
         try {
-            let db = await pouchManager.getLocalDb();
+            let db = await pouchManager.getDb();
             let indexes = await db.get("indexes");
             indexes.indexes = [];
             await db.put(indexes);

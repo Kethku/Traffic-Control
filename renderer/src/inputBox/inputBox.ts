@@ -75,7 +75,10 @@ document.onkeydown = function(evt) {
       selectedIndex = completions.length - 1;
     }
   } else if (evt.key == "Tab") {
+    let braceSubstitution = /{.*}/;
     overwriteText = completions[selectedIndex];
+    overwriteText = overwriteText.replace(braceSubstitution, "");
+
     m.redraw();
     evt.preventDefault();
   } else if (evt.key == "Enter") {

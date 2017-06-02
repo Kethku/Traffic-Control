@@ -1,7 +1,7 @@
 import pouchManager from "../pouchManager";
 
 export async function fetch(id: string, options: any) {
-  let db = await pouchManager.getLocalDb();
+  let db = await pouchManager.getDb();
   try {
     let doc = await db.get(id);
   } catch (err) {

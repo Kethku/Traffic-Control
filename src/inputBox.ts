@@ -24,7 +24,8 @@ export function createInputBox() {
     transparent: true,
     alwaysOnTop: true,
     thickFrame: true,
-    frame: false
+    frame: false,
+    useContentSize: true
   });
 
   inputBoxWindow.setBounds(display.bounds);
@@ -43,24 +44,27 @@ export function createInputBox() {
     }
   });
 
-  return inputBoxWindow.webContents;
+  return inputBoxWindow;
 }
 
 export function createDebugInputBox() {
-  let contents = createInputBox();
-  contents.openDevTools({mode: "detach"});
+  let window = createInputBox();
+  window.webContents.openDevTools({mode: "detach"});
+  window.setSkipTaskbar(false);
 }
-
-ipcMain.on('hideInputBox', closeInputBox);
-ipcMain.on('inputBoxChanged', async (event, currentText) => {
-  let completions = await ProduceCompletions.Poll(currentText);
-  event.sender.send('completions', completions);
-});
-ipcMain.on('inputSent', async (event, text) => {
-  InputRecieved.Publish(text);
-});
 
 export default function setup() {
   globalShortcut.register('Ctrl+Space', createInputBox);
   globalShortcut.register('Ctrl+Alt+Space', createDebugInputBox);
+
+  ipcMain.on('hideInputBox', closeInputBox);
+  ipcMain.on('inputBoxChanged', async (event, currentText) => {
+    let completions = (await ProduceCompletions.Poll(currentText)).filter(x => x != undefined);
+    if (completions) {
+      event.sender.send('completions', completions);
+    }
+  });
+  ipcMain.on('inputSent', async (event, text) => {
+    InputRecieved.Publish(text);
+  });
 }

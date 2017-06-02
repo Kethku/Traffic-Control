@@ -1,11 +1,10 @@
 import * as pouchdb from "pouchdb";
 import * as yaml from "js-yaml";
 import pouchManager from "../pouchManager";
-import settingsManager from "../settingsManager";
 import indexManager from "../indexManager";
 
 export async function query(query: string, options: any) {
-    let db = await pouchManager.getLocalDb();
+    let db = await pouchManager.getDb();
     try {
         let queryObj: any;
         try {
@@ -28,8 +27,7 @@ export async function query(query: string, options: any) {
 export async function search(query: string, options: any) {
     try {
         console.log("Searching...");
-        let settings = await settingsManager.getSettings();
-        let db = await pouchManager.getLocalDb();
+        let db = await pouchManager.getDb();
         let indexedFields = await indexManager.getIndexedFields(db);
         let results = await db.search({query: query, fields: indexedFields, include_docs: true})
         let docs = results.rows.map(row => row.doc);

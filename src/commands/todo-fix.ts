@@ -19,7 +19,7 @@ function dateNeedsUpdated(doc: any, id: string) {
 
 export async function fix() {
   try {
-    let db = await pouchManager.getLocalDb();
+    let db = await pouchManager.getDb();
     let findResponse = await db.find({
       selector: {
         todo: { $exists: true }
