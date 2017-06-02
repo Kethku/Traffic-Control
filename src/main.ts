@@ -1,8 +1,10 @@
 import {app, globalShortcut} from 'electron';
-import {createInputBox} from './inputBox';
+import inputBox from './inputBox';
+import youtube from './youtube';
 
 function setup() {
-  globalShortcut.register('Alt+Space', createInputBox);
+  inputBox();
+  youtube();
 }
 
 app.on('ready', setup);

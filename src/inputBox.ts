@@ -1,4 +1,4 @@
-import {BrowserWindow, screen, ipcMain} from "electron";
+import {BrowserWindow, screen, ipcMain, globalShortcut} from "electron";
 import * as path from 'path';
 import * as url from 'url';
 
@@ -27,15 +27,10 @@ export function createInputBox() {
     frame: false
   });
 
-  inputBoxWindow.setBounds({
-    width: display.bounds.width,
-    height: display.bounds.height,
-    x: display.bounds.x,
-    y: display.bounds.y
-  });
+  inputBoxWindow.setBounds(display.bounds);
 
   inputBoxWindow.loadURL(url.format({
-    pathname: path.join(__dirname, "../renderer/build", 'inputBox.html'),
+    pathname: path.join(__dirname, "../renderer/build/inputBox", 'inputBox.html'),
     protocol: 'file:',
     slashes: true
   }));
@@ -47,9 +42,25 @@ export function createInputBox() {
       closeInputBox();
     }
   });
+
+  return inputBoxWindow.webContents;
+}
+
+export function createDebugInputBox() {
+  let contents = createInputBox();
+  contents.openDevTools({mode: "detach"});
 }
 
 ipcMain.on('hideInputBox', closeInputBox);
-ipcMain.on('inputBoxChanged', (event, currentText) => {
-  event.sender.send('completions', ["1", "2", "3"]);
+ipcMain.on('inputBoxChanged', async (event, currentText) => {
+  let completions = await ProduceCompletions.Poll(currentText);
+  event.sender.send('completions', completions);
 });
+ipcMain.on('inputSent', async (event, text) => {
+  InputRecieved.Publish(text);
+});
+
+export default function setup() {
+  globalShortcut.register('Ctrl+Space', createInputBox);
+  globalShortcut.register('Ctrl+Alt+Space', createDebugInputBox);
+}

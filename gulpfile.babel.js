@@ -46,7 +46,7 @@ function buildTasks(name, folder) {
     return gulp.src(tsPaths.src)
       .pipe(sourcemaps.init())
       .pipe(project())
-      .pipe(sourcemaps.write(folder))
+      .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(tsPaths.dest));
   }
 

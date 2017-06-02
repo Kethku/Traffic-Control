@@ -5,8 +5,8 @@ let ipcRenderer = require('electron').ipcRenderer;
 let boxStyle = ".bg-gray-transparent.outline-0.ma0.f4.code.w-100.light-silver"
 
 let text = "";
-let completions: string[] = [
-]
+let overwriteText = "";
+let completions: string[] = []
 let selectedIndex: number = 0;
 
 function focus(vnode: any) {
@@ -15,26 +15,35 @@ function focus(vnode: any) {
 
 let Input = {
   view: () => {
-    return m("input.pa3.b--none" + boxStyle, {value: text, oncreate: focus, onupdate: focus, onkeyup: m.withAttr("value", (value) => {
+    let properties: any = {oncreate: focus, onupdate: focus, onkeyup: m.withAttr("value", (value) => {
       if (value !== text) {
         text = value;
-        ipcRenderer.send("inputBoxChanged", value);
+        setTimeout(() => {
+          ipcRenderer.send("inputBoxChanged", value);
+        });
       }
-    })});
+    })};
+    if (overwriteText) {
+      properties.value = overwriteText;
+      overwriteText = null;
+    }
+    return m("input.pa3.b--none" + boxStyle, properties);
   }
 }
 
 let Completions = {
   view: () => {
-    let renderedCompletions = [];
-    for (let i = 0; i < completions.length; i++) {
-      let highlightStyle = "";
-      if (i == selectedIndex) {
-        highlightStyle = ".bt.bb.bw1.b--white-40";
+    if (completions.length > 0) {
+      let renderedCompletions = [];
+      for (let i = 0; i < completions.length; i++) {
+        let highlightStyle = "";
+        if (i == selectedIndex) {
+          highlightStyle = ".bt.bb.bw1.b--white-40";
+        }
+        renderedCompletions.push(m("div.pa2" + boxStyle + highlightStyle, completions[i]));
       }
-      renderedCompletions.push(m("div.pa2" + boxStyle + highlightStyle, completions[i]));
+      return m('div', renderedCompletions);
     }
-    return m('div', renderedCompletions);
   }
 }
 
@@ -66,11 +75,12 @@ document.onkeydown = function(evt) {
       selectedIndex = completions.length - 1;
     }
   } else if (evt.key == "Tab") {
-    text = completions[selectedIndex];
+    overwriteText = completions[selectedIndex];
     m.redraw();
     evt.preventDefault();
   } else if (evt.key == "Enter") {
     ipcRenderer.send("inputSent", text);
+    ipcRenderer.send("hideInputBox");
   }
 };
 
