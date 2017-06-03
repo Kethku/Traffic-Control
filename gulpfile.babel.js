@@ -82,11 +82,19 @@ function restart(done) {
   done();
 }
 
+function rebuildPackages(done) {
+  exec("electron-rebuild", (err, stdout, stderr) => {
+    console.log(stdout);
+    console.log(stderr);
+    done(err);
+  });
+}
+
 gulp.task(run);
 gulp.task(restart);
 
 gulp.task("clean", gulp.parallel("clean-main", "clean-renderer"));
-gulp.task("rebuild", gulp.parallel("rebuild-main", "rebuild-renderer"));
+gulp.task("rebuild", gulp.series(rebuildPackages, gulp.parallel("rebuild-main", "rebuild-renderer")));
 gulp.task("watch", gulp.parallel("watch-main", "watch-renderer", () => gulp.watch(["build/**/*.js"], debounce(restart, 3000))));
 gulp.task("dev", gulp.series("clean", "rebuild", gulp.parallel("watch", restart)));
 

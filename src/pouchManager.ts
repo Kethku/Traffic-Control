@@ -1,6 +1,5 @@
 import * as os from "os";
 import * as path from "path";
-import * as fs from "fs";
 import * as pouchdb from "pouchdb";
 import * as pouchdbQuickSearch from "pouchdb-quick-search";
 import * as pouchdbFind from "pouchdb-find";
@@ -13,19 +12,19 @@ export module PouchManager {
   let db: PouchDB.Database<any>;
 
   function syncDb() {
-    console.log("syncing");
     return new Promise((resolve, reject) => {
-      db.sync(remoteDb, {
+      remoteDb.sync(db, {
+        live: true,
         retry: true
       }).on("complete", (info) => {
-        console.log("sync complete: " + info);
+        console.log("sync complete");
         resolve();
       }).on("error", (error) => {
         reject(error);
       }).on("denied", (error) => {
         reject(error);
       }).on("paused", (error) => {
-        console.log("paused: " + error);
+        console.error("paused: " + error);
       }).on("active", () => {
         console.log("resumed");
       });
@@ -36,11 +35,19 @@ export module PouchManager {
     try {
       if (db === undefined) {
         let settings = await settingsManager.readSettings();
-        console.log(settings);
         pouchdb.plugin(pouchdbQuickSearch);
         pouchdb.plugin(pouchdbFind);
-        remoteDb = new pouchdb("http://localhost:5984/personal");
-        db = new pouchdb("personal");
+        remoteDb = new pouchdb("http://" + settings.user + ":" + settings.pass + "@localhost:5984/personal");
+        console.log(remoteDb);
+        console.log(await remoteDb.info());
+        let dbDirectory = path.join(os.homedir(), ".db");
+        if (!await asyncUtils.exists(dbDirectory)) {
+          await asyncUtils.makedir(dbDirectory);
+        }
+        let localDbAddress = path.join(dbDirectory, "db");
+        db = new pouchdb(localDbAddress);
+        console.log(db);
+        console.log(await db.info());
         await syncDb();
       }
       let indexes = await indexManager.getIndexedFields(db);
