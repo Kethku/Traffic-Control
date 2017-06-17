@@ -13,18 +13,22 @@ export module PouchManager {
 
   function syncDb() {
     return new Promise((resolve, reject) => {
+      let resolved = false;
       remoteDb.sync(db, {
         live: true,
         retry: true
-      }).on("complete", (info) => {
-        console.log("sync complete");
-        resolve();
       }).on("error", (error) => {
         reject(error);
       }).on("denied", (error) => {
         reject(error);
       }).on("paused", (error) => {
-        console.error("paused: " + error);
+        if (error) {
+          console.error("paused: " + error);
+        } else if (!resolved) {
+          console.log("Sync up to date!");
+          resolve();
+          resolved = true;
+        }
       }).on("active", () => {
         console.log("resumed");
       });
@@ -38,16 +42,12 @@ export module PouchManager {
         pouchdb.plugin(pouchdbQuickSearch);
         pouchdb.plugin(pouchdbFind);
         remoteDb = new pouchdb("http://" + settings.user + ":" + settings.pass + "@localhost:5984/personal");
-        console.log(remoteDb);
-        console.log(await remoteDb.info());
         let dbDirectory = path.join(os.homedir(), ".db");
         if (!await asyncUtils.exists(dbDirectory)) {
           await asyncUtils.makedir(dbDirectory);
         }
         let localDbAddress = path.join(dbDirectory, "db");
         db = new pouchdb(localDbAddress);
-        console.log(db);
-        console.log(await db.info());
         await syncDb();
       }
       let indexes = await indexManager.getIndexedFields(db);

@@ -21,7 +21,7 @@ ${copy.content}`;
       if (lines.length > 3 && lines[0].match(frontMatterDelimiter)) {
         let frontMatter = "";
         let markdown = "";
-        let inFrontMatter = true
+        let inFrontMatter = true;
         for (let i = 0; i < lines.length; i++) {
           let line = lines[i];
           if (inFrontMatter && line.match(frontMatterDelimiter)) {
@@ -37,6 +37,8 @@ ${copy.content}`;
         let entry = yaml.load(frontMatter);
         entry.content = markdown;
         return entry;
+      } else {
+        return yaml.load(file);
       }
     } catch (e) {
       return null;

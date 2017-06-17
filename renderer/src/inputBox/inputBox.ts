@@ -6,7 +6,7 @@ let boxStyle = ".bg-gray-transparent.outline-0.ma0.f4.code.w-100.light-silver"
 
 let text = "";
 let overwriteText = "";
-let completions: string[] = []
+let completions: string[] = [];
 let selectedIndex: number = 0;
 
 function focus(vnode: any) {
