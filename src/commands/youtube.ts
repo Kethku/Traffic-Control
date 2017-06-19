@@ -62,6 +62,7 @@ export default function setup() {
     let regex = /^(yt|youtube) ((.)+)$/;
     let result = text.match(regex);
     if (result) {
+      console.log("Running youtube");
       createYoutubePlayer(result[2]);
     }
   });

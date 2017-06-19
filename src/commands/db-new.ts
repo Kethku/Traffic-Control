@@ -35,11 +35,14 @@ export default function setup() {
   InputRecieved.Subscribe((text) => {
     let regex = /^(new) ?((.)+)?$/;
     let result = text.match(regex);
-    let tag = result[2];
-    if (tag) {
-      newEntry(tag.trim());
-    } else {
-      newEntry();
+    if (result) {
+      console.log("Running new");
+      let tag = result[2];
+      if (tag) {
+        newEntry(tag.trim());
+      } else {
+        newEntry();
+      }
     }
   });
 }

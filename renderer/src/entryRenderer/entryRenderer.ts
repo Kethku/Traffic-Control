@@ -6,6 +6,7 @@ let entry: any = null;
 let ipcRenderer = require('electron').ipcRenderer;
 
 ipcRenderer.on("renderEntry", (entryToRender: any) => {
+  alert(entryToRender);
   entry = entryToRender;
   m.redraw();
 });
@@ -47,3 +48,4 @@ function Entry() {
 }
 
 m.mount(document.body, Entry);
+ipcRenderer.send("ready");

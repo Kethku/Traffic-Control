@@ -26,6 +26,7 @@
     "typescript": "^2.1.6"
   },
   "dependencies": {
+    "@types/showdown": "^1.4.32",
     "js-yaml": "^3.8.3",
     "moment": "^2.18.1",
     "pouchdb": "^6.2.0",

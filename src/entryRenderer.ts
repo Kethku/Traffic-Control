@@ -26,12 +26,12 @@ export function renderEntries(entries: any[]) {
     });
 
     entryWindow.loadURL(url.format({
-      pathname: path.join(__dirname, "../renderer/build/inputBox", 'inputBox.html'),
+      pathname: path.join(__dirname, "../renderer/build/entryRenderer", 'entryRenderer.html'),
       protocol: 'file:',
       slashes: true
     }));
 
-    entryWindow.on('ready-to-show', () => {
+    entryWindow.on('ready', () => {
       entryWindow.webContents.send('renderEntry', entry);
       entryWindow.show();
     });
