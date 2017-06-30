@@ -15,7 +15,7 @@ function focus(vnode: any) {
 
 let Input = {
   view: () => {
-    let properties: any = {oncreate: focus, onupdate: focus, onkeyup: m.withAttr("value", (value) => {
+    let properties: any = {oncreate: focus, onupdate: focus, onkeydown: m.withAttr("value", (value) => {
       if (value !== text) {
         text = value;
         setTimeout(() => {
@@ -56,7 +56,7 @@ let InputBar = {
   }
 }
 
-ipcRenderer.on("completions", (event, newCompletions: string[]) => {
+ipcRenderer.on("completions", (event: any, newCompletions: string[]) => {
   completions = newCompletions;
   m.redraw();
 });

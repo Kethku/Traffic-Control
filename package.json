@@ -5,13 +5,14 @@
   "author": "02Credits LLC",
   "main": "build/main.js",
   "devDependencies": {
-    "@types/electron": "^1.4.37",
     "@types/jquery": "^2.0.41",
     "@types/js-yaml": "^3.5.30",
+    "@types/katex": "^0.5.0",
     "@types/mithril": "^1.1.2",
     "@types/node": "^7.0.14",
-    "@types/pouchdb": "^6.1.0",
+    "@types/pouchdb": "^6.1.1",
     "@types/pouchdb-find": "^0.10.0",
+    "@types/showdown": "^1.4.32",
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.24.1",
     "del": "^2.2.2",
@@ -26,7 +27,6 @@
     "typescript": "^2.1.6"
   },
   "dependencies": {
-    "@types/showdown": "^1.4.32",
     "js-yaml": "^3.8.3",
     "moment": "^2.18.1",
     "pouchdb": "^6.2.0",

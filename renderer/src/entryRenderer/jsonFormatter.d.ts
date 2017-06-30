@@ -16,5 +16,7 @@ declare module JSONFormatter {
 }
 
 declare module "json-formatter-js" {
-  export default JSONFormatter.Formatter;
+  export default {
+    default: JSONFormatter.Formatter
+  };
 }

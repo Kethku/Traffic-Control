@@ -58,13 +58,13 @@ export default function setup() {
   globalShortcut.register('Ctrl+Alt+Space', createDebugInputBox);
 
   ipcMain.on('hideInputBox', closeInputBox);
-  ipcMain.on('inputBoxChanged', async (event, currentText) => {
+  ipcMain.on('inputBoxChanged', async (event: any, currentText: any) => {
     let completions = (await ProduceCompletions.Poll(currentText)).filter(x => x != undefined);
     if (completions) {
       event.sender.send('completions', completions);
     }
   });
-  ipcMain.on('inputSent', async (event, text) => {
+  ipcMain.on('inputSent', async (event: any, text: any) => {
     InputRecieved.Publish(text);
   });
 }

@@ -3,12 +3,14 @@ import inputBox from './inputBox';
 import youtube from './commands/youtube';
 import newEntry from "./commands/db-new";
 import recent from "./commands/db-recent";
+import query from "./commands/db-query";
 
 function setup() {
   inputBox();
   youtube();
   newEntry();
   recent();
+  query();
 }
 
 app.on('ready', setup);

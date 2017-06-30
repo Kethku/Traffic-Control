@@ -1,3 +1,6 @@
+/// <reference types="pouchdb-core" />
+/* tslint:disable:no-single-declare-module */
+
 declare namespace PouchDB {
   namespace Authentication {
     interface AuthResponse {
@@ -55,7 +58,7 @@ declare namespace PouchDB {
     }
   }
 
-  interface Database<Content extends Core.Encodable> {
+  interface Database<Content extends {}> {
     signup(user: string, pass: string,
            callback?: Core.Callback<Authentication.SignupError, Authentication.AuthResponse>): void;
     signup(user: string, pass: string, options: Authentication.SignupOptions,

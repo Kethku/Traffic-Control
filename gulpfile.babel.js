@@ -78,7 +78,13 @@ function restart(done) {
   if (electron) {
     electron.kill();
   }
-  electron = spawn(electronPath, ["."]);
+  electron = exec("electron .");
+  electron.stdout.on('data', (data) => {
+    console.log(`stdout: ${data.toString().trim()}`);
+  });
+  electron.stderr.on('data', (data) => {
+    console.log(`stderr: ${data.toString().trim()}`);
+  });
   done();
 }
 
@@ -90,12 +96,16 @@ function rebuildPackages(done) {
   });
 }
 
+function watchService() {
+  return gulp.watch(["build/**/*.js"], debounce(restart, 3000));
+}
+
 gulp.task(run);
 gulp.task(restart);
 
 gulp.task("clean", gulp.parallel("clean-main", "clean-renderer"));
 gulp.task("rebuild", gulp.series(rebuildPackages, gulp.parallel("rebuild-main", "rebuild-renderer")));
-gulp.task("watch", gulp.parallel("watch-main", "watch-renderer", () => gulp.watch(["build/**/*.js"], debounce(restart, 3000))));
+gulp.task("watch", gulp.parallel("watch-main", "watch-renderer", watchService));
 gulp.task("dev", gulp.series("clean", "rebuild", gulp.parallel("watch", restart)));
 
 gulp.task("default", gulp.task("rebuild"));

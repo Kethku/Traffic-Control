@@ -6,9 +6,9 @@ export module FormatUtils {
     if (entry.content) {
       delete copy.content;
       return `---
-${yaml.dump(copy)}
+${yaml.dump(copy).trim()}
 ---
-${copy.content}`;
+${entry.content}`;
     } else {
       return yaml.dump(copy);
     }
@@ -22,7 +22,7 @@ ${copy.content}`;
         let frontMatter = "";
         let markdown = "";
         let inFrontMatter = true;
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 1; i < lines.length; i++) {
           let line = lines[i];
           if (inFrontMatter && line.match(frontMatterDelimiter)) {
             inFrontMatter = false;

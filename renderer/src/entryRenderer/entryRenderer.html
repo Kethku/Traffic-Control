@@ -1,9 +1,21 @@
+<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="custom.css">
+        <link rel="stylesheet" href="deps/katex/katex.min.css">
+        <script>
+         window.nodeRequire = window.require;
+         delete window.require;
+         delete window.module;
+         delete window.define;
+        </script>
+        <script src="deps/viz/viz.js"></script>
         <script src="deps/systemjs/system.js"></script>
         <script>
+         window.define = SystemJS.amdDefine;
+         window.require = window.requirejs = SystemJS.amdRequire;
+
          SystemJS.config({
              packages: {
                  '.': {
@@ -11,15 +23,22 @@
                      baseURL: "build"
                  }
              },
+             meta: {
+                 'deps/showdown/showdown.js': {
+                     format: 'cjs'
+                 }
+             },
              map: {
                  'jquery': 'deps/jquery/jquery-3.2.1',
                  'mithril': 'deps/mithril/mithril',
-                 'json-formatter-js': 'deps/json-formatter-js/json-formatter'
+                 'json-formatter-js': 'deps/json-formatter-js/json-formatter',
+                 'showdown': 'deps/showdown/showdown.js',
+                 'katex': 'deps/katex/katex.js'
              }
          });
         </script>
     </head>
-    <body>
+    <body class="overflow-hidden.bg--none">
         <script>
          SystemJS.import('./entryRenderer.js');
         </script>
