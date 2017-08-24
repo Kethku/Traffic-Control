@@ -11,7 +11,6 @@ export interface Settings {
 
 export async function readSettings() {
   return await yaml.load(
-    (await asyncUtils.readFile(path.join(os.homedir(), ".dbsettings"))) as string,
-    "utf8"
+    (await asyncUtils.readFile(path.join(os.homedir(), ".dbsettings"))) as string
   ) as Settings;
 }

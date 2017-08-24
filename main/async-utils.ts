@@ -1,7 +1,7 @@
 import * as fs from "fs";
 
 export module AsyncUtils {
-  export function readFile(path: string, options?: string | {encoding?: string, flag?: string}) {
+  export function readFile(path: string, options?: {encoding?: string, flag?: string}) {
     return new Promise<string | Buffer>((resolve, reject) => {
       fs.readFile(path, options, (err, data) => {
         if (err) reject(err);

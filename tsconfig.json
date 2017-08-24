@@ -4,6 +4,7 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
   }
 }

@@ -1,6 +1,6 @@
-import m from "mithril";
+import * as m from "mithril";
 import {Vnode, VnodeDOM} from 'mithril';
-import showdown from 'showdown';
+import * as showdown from 'showdown';
 import vizExtension from './vizExtension';
 import katexExtension from './katexExtension';
 import * as JSONFormatter from 'json-formatter-js';

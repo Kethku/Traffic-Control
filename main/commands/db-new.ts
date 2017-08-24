@@ -20,7 +20,7 @@ export async function newEntry(tag?: string) {
   }
 
   await editorManager.editFile(fileName, true);
-  let contents = await asyncUtils.readFile(fileName, "utf8") as string;
+  let contents = await asyncUtils.readFile(fileName, {encoding: "utf8"}) as string;
   let json = formatUtils.readFile(contents);
   db.put(json);
 }
