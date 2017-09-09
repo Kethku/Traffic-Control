@@ -7,6 +7,9 @@ import * as JSONFormatter from 'json-formatter-js';
 
 import 'katex';
 
+require("./style");
+require("./custom");
+
 let entry: any = null;
 let electron = nodeRequire('electron');
 let ipc = electron.ipcRenderer;

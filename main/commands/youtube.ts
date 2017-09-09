@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as url from 'url';
 
 import {InputRecieved, ProduceCompletions} from "../inputBox";
+import * as debugManager from "../debugManager";
 
 let youtubeWindow: Electron.BrowserWindow;
 
@@ -18,7 +19,7 @@ export function createYoutubePlayer(youtubeUrl: string) {
   let regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
   let results = youtubeUrl.match(regex);
   if (results) {
-    let preloadUrl = path.join(__dirname, "../renderer/build", "youtubePreload.js");
+    let preloadUrl = path.join(debugManager.host, "renderer/youtubePreload.js");
 
     console.log(preloadUrl);
     youtubeWindow = new BrowserWindow({

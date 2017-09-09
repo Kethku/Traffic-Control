@@ -1,4 +1,6 @@
 import * as m from "mithril";
+import "./style.css";
+import "./custom.css";
 
 let ipcRenderer = require('electron').ipcRenderer;
 

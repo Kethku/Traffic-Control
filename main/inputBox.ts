@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as url from 'url';
 
 import {EventManager1, PollManager1} from "./eventManager";
+import * as debugManager from "./debugManager";
 
 let inputBoxWindow: Electron.BrowserWindow;
 
@@ -29,18 +30,12 @@ export function createInputBox() {
   });
 
   inputBoxWindow.setBounds(display.bounds);
-
-  inputBoxWindow.loadURL(url.format({
-    pathname: path.join(__dirname, "../renderer/build/inputBox", 'inputBox.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
-
+  inputBoxWindow.loadURL(path.join(debugManager.host, "renderer/inputBox/inputBox.html"));
   inputBoxWindow.setIgnoreMouseEvents(true);
 
   inputBoxWindow.on('blur', () => {
     if (!inputBoxWindow.webContents.isDevToolsFocused()) {
-      closeInputBox();
+      // closeInputBox();
     }
   });
 

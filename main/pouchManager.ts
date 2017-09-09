@@ -1,6 +1,6 @@
 import * as os from "os";
 import * as path from "path";
-import * as pouchdb from "pouchdb";
+import Pouchdb from "pouchdb";
 import * as pouchdbQuickSearch from "pouchdb-quick-search";
 import * as pouchdbFind from "pouchdb-find";
 import asyncUtils from "./async-utils";
@@ -39,8 +39,8 @@ export module PouchManager {
     try {
       if (db === undefined) {
         let settings = await settingsManager.readSettings();
-        pouchdb.plugin(pouchdbQuickSearch);
-        pouchdb.plugin(pouchdbFind);
+        var pouchdb = Pouchdb.plugin(pouchdbQuickSearch);
+        pouchdb = pouchdb.plugin(pouchdbFind);
         remoteDb = new pouchdb("http://" + settings.user + ":" + settings.pass + "@localhost:5984/personal");
         let dbDirectory = path.join(os.homedir(), ".db");
         if (!await asyncUtils.exists(dbDirectory)) {
