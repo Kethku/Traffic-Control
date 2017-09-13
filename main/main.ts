@@ -9,6 +9,8 @@ import * as debugManager from "./debugManager";
 import * as express from 'express';
 import * as path from 'path';
 
+require('source-map-support').install();
+
 function setup() {
   inputBox();
   youtube();

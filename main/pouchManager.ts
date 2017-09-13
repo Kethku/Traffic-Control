@@ -1,11 +1,15 @@
 import * as os from "os";
 import * as path from "path";
-import Pouchdb from "pouchdb";
-import * as pouchdbQuickSearch from "pouchdb-quick-search";
-import * as pouchdbFind from "pouchdb-find";
+import PouchDB from "pouchdb";
+import * as PouchQuickSearch from "pouchdb-quick-search";
+import * as PouchFind from "pouchdb-find";
 import asyncUtils from "./async-utils";
 import indexManager from "./indexManager";
 import * as settingsManager from "./settingsManager";
+
+var pouchdb = PouchDB
+  .plugin(require('pouchdb-quick-search'))
+  .plugin(require('pouchdb-find').default);
 
 export module PouchManager {
   let remoteDb: PouchDB.Database<any>;
@@ -39,8 +43,6 @@ export module PouchManager {
     try {
       if (db === undefined) {
         let settings = await settingsManager.readSettings();
-        var pouchdb = Pouchdb.plugin(pouchdbQuickSearch);
-        pouchdb = pouchdb.plugin(pouchdbFind);
         remoteDb = new pouchdb("http://" + settings.user + ":" + settings.pass + "@localhost:5984/personal");
         let dbDirectory = path.join(os.homedir(), ".db");
         if (!await asyncUtils.exists(dbDirectory)) {
@@ -49,8 +51,10 @@ export module PouchManager {
         let localDbAddress = path.join(dbDirectory, "db");
         db = new pouchdb(localDbAddress);
         await syncDb();
+        console.log(JSON.stringify(await db.allDocs()))
       }
       let indexes = await indexManager.getIndexedFields(db);
+      console.log(indexes);
       await db.createIndex({index: {fields: indexes}});
       await db.search({fields: indexes, build: true});
       return db;

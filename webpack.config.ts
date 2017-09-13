@@ -3,14 +3,14 @@ import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as webpack from 'webpack';
 import { TsConfigPathsPlugin } from 'awesome-typescript-loader';
 
-function generateConfig(options?: any) {
+function generateConfig(options?: any): webpack.Configuration {
   return {
     context: path.resolve('.'),
     module: {
       rules: [
         {
           test: /\.tsx?$/,
-          loader: 'babel-loader!awesome-typescript-loader',
+          loader: 'awesome-typescript-loader',
           exclude: path.resolve(__dirname, "node_modules"),
           query: options
         }, {
@@ -18,18 +18,17 @@ function generateConfig(options?: any) {
           loader: 'style-loader!css-loader',
           exclude: path.resolve(__dirname, "node_modules")
         }
-      ],
-      devServer: {
-        inline: true,
-        hot: true,
-        port: 8080
-      },
-      devtool: "source-map",
-      resolve: {
-        extensions: ['.js', '.ts', '.tsx', '.jsx']
-      },
-      node: {__dirname: false}
-    }
+      ]    },
+    devServer: {
+      inline: true,
+      hot: true,
+      port: 8080
+    },
+    devtool: "source-map",
+    resolve: {
+      extensions: ['.js', '.ts', '.tsx', '.jsx']
+    },
+    node: {__dirname: false}
   }
 }
 
@@ -48,20 +47,20 @@ const commonOutput: webpack.Output = {
 
 module.exports = [
   Object.assign({
-    target: 'electron-main',
+    target: 'electron',
     entry: ['./main/main', 'babel-polyfill'],
     output: Object.assign({
       path: path.resolve(__dirname, "build"),
       publicPath: '/'
     }, commonOutput)
-  }, generateConfig({"include": [ "main\\**\\*" ]})),
+  }, generateConfig({"include": [ "./main/**/*" ]})),
   Object.assign({
     entry: ['./renderer/youtubePreload', 'babel-polyfill'],
     output: Object.assign({
       path: path.resolve(__dirname, "build/renderer"),
       publicPath: '/renderer/'
     }, commonOutput)
-  }, generateRendererConfig({"include": [ "renderer\\youtubePreload.ts" ]})),
+  }, generateRendererConfig({"include": [ "./renderer/youtubePreload.ts" ]})),
   Object.assign({
     entry: ['./renderer/inputBox/inputBox', 'babel-polyfill'],
     output: Object.assign({
@@ -74,5 +73,5 @@ module.exports = [
         filename: 'inputBox.html'
       })
     ]
-  }, generateRendererConfig({"include": [ "renderer\\inputBox\\**\\*" ]}))
+  }, generateRendererConfig({"include": [ "./renderer/inputBox/**/*" ]}))
 ];
