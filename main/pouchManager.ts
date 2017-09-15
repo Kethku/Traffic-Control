@@ -7,9 +7,12 @@ import asyncUtils from "./async-utils";
 import indexManager from "./indexManager";
 import * as settingsManager from "./settingsManager";
 
+var memoryAdapter = require('pouchdb-adapter-memory');
+console.log(memoryAdapter);
 var pouchdb = PouchDB
   .plugin(require('pouchdb-quick-search'))
-  .plugin(require('pouchdb-find').default);
+  .plugin(require('pouchdb-find').default)
+  .plugin(memoryAdapter.default);
 
 export module PouchManager {
   let remoteDb: PouchDB.Database<any>;
@@ -49,7 +52,7 @@ export module PouchManager {
           await asyncUtils.makedir(dbDirectory);
         }
         let localDbAddress = path.join(dbDirectory, "db");
-        db = new pouchdb(localDbAddress);
+        db = new pouchdb("db", {adapter: "memory"});
         await syncDb();
         console.log(JSON.stringify(await db.allDocs()))
       }
