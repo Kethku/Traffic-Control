@@ -7,12 +7,10 @@ import asyncUtils from "./async-utils";
 import indexManager from "./indexManager";
 import * as settingsManager from "./settingsManager";
 
-var memoryAdapter = require('pouchdb-adapter-memory');
-console.log(memoryAdapter);
 var pouchdb = PouchDB
   .plugin(require('pouchdb-quick-search'))
   .plugin(require('pouchdb-find').default)
-  .plugin(memoryAdapter.default);
+  .plugin(require('pouchdb-adapter-memory').default);
 
 export module PouchManager {
   let remoteDb: PouchDB.Database<any>;

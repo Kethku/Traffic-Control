@@ -35,7 +35,7 @@ export function createInputBox() {
 
   inputBoxWindow.on('blur', () => {
     if (!inputBoxWindow.webContents.isDevToolsFocused()) {
-      // closeInputBox();
+      closeInputBox();
     }
   });
 

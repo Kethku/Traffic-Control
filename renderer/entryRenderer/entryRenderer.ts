@@ -10,6 +10,8 @@ import 'katex';
 require("./style");
 require("./custom");
 
+alert("This is a test.")
+
 let entry: any = null;
 let electron = nodeRequire('electron');
 let ipc = electron.ipcRenderer;
