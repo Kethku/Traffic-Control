@@ -3,6 +3,7 @@ import asyncUtils from "./async-utils";
 import formatUtils from "./formatUtils";
 import pouchManager from "./pouchManager";
 import editorManager from "./editorManager";
+import * as debugManager from "./debugManager";
 import * as path from 'path';
 import * as url from 'url';
 
@@ -129,11 +130,7 @@ export function renderEntries(entries: any[]) {
     entryWindow.on('focus', onFocus);
     entryWindow.on('blur', onBlur);
 
-    entryWindow.loadURL(url.format({
-      pathname: path.join(__dirname, "../renderer/build/entryRenderer", 'entryRenderer.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
+    entryWindow.loadURL(path.join(debugManager.host, "renderer/entryRenderer/entryRenderer.html"));
 
     entryWindows.push({window: entryWindow, entry: entry, free: free});
   }

@@ -34,7 +34,20 @@ function generateConfig(options?: any): webpack.Configuration {
 
 function generateRendererConfig(options?: any) {
   return Object.assign({
-    target: 'electron-renderer'
+    target: 'electron-renderer',
+    externals: [
+      (function () {
+        var IGNORES = [
+          'electron'
+        ];
+        return function (context: any, request: string, callback: any) {
+          if (IGNORES.indexOf(request) >= 0) {
+            return callback(null, "require('" + request + "')");
+          }
+          return callback();
+        };
+      })()
+    ]
   }, generateConfig(options));
 }
 
@@ -73,5 +86,18 @@ module.exports = [
         filename: 'inputBox.html'
       })
     ]
-  }, generateRendererConfig({"include": [ "./renderer/inputBox/**/*" ]}))
+  }, generateRendererConfig({"include": [ "./renderer/inputBox/**/*" ]})),
+  Object.assign({
+    entry: ['./renderer/entryRenderer/entryRenderer', 'babel-polyfill'],
+    output: Object.assign({
+      path: path.resolve(__dirname, "build/renderer/entryRenderer"),
+      publicPath: '/renderer/entryRenderer/'
+    }, commonOutput),
+    plugins: [
+      new HtmlWebpackPlugin({
+        title: 'Traffic Control Input',
+        filename: 'entryRenderer.html'
+      }),
+    ]
+  }, generateRendererConfig({"include": [ "./renderer/entryRenderer/**/*" ]}))
 ];

@@ -24,6 +24,7 @@ export async function recent(countArg?: number) {
     for (let i = 0; i < Math.min(results.docs.length, count); i++) {
       resultDocs.push(results.docs[i]);
     }
+    console.log(resultDocs);
     // Display docs.
     entryRenderer.renderEntries(resultDocs);
   } catch (err) {

@@ -3508,6 +3508,10 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
+jquery@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+
 js-base64@^2.1.9:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.3.2.tgz#a79a923666372b580f8e27f51845c6f7e8fbfbaf"
@@ -3635,6 +3639,12 @@ jstransform@~3.0.0:
     base62 "0.1.1"
     esprima-fb "~3001.1.0-dev-harmony-fb"
     source-map "0.1.31"
+
+katex@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.8.3.tgz#909d99864baf964c3ccae39c4a99a8e0fb9a1bd0"
+  dependencies:
+    match-at "^0.1.0"
 
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
@@ -3914,6 +3924,10 @@ map-visit@^1.0.0:
   resolved "https://registry.yarnpkg.com/map-visit/-/map-visit-1.0.0.tgz#ecdca8f13144e660f1b5bd41f12f3479d98dfb8f"
   dependencies:
     object-visit "^1.0.0"
+
+match-at@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/match-at/-/match-at-0.1.1.tgz#25d040d291777704d5e6556bbb79230ec2de0540"
 
 math-clamp-x@^1.0.0:
   version "1.1.0"
@@ -5954,6 +5968,12 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
+showdown@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/showdown/-/showdown-1.7.4.tgz#6bbc9dd2cdb1e5fdd749ecdadc6a47b856594ae0"
+  dependencies:
+    yargs "^8.0.1"
+
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
@@ -6837,6 +6857,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+viz.js@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/viz.js/-/viz.js-1.8.0.tgz#e0cb5ad241368e35b1a6e960691eba454c24951f"
+
 vm-browserify@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
@@ -7084,7 +7108,7 @@ yargs@^7.0.2:
     y18n "^3.2.1"
     yargs-parser "^5.0.0"
 
-yargs@^8.0.2:
+yargs@^8.0.1, yargs@^8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-8.0.2.tgz#6299a9055b1cefc969ff7e79c1d918dceb22c360"
   dependencies:

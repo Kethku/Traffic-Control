@@ -2,7 +2,6 @@
     background-color: rgba(20, 20, 20, 0.9);
 }
 
-
 body {
-    overlow: hidden;
+    overflow: hidden !important;
 }

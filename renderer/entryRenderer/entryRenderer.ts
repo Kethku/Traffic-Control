@@ -1,21 +1,15 @@
+import {ipcRenderer as ipc, remote} from 'electron';
 import * as m from "mithril";
 import {Vnode, VnodeDOM} from 'mithril';
 import * as showdown from 'showdown';
 import vizExtension from './vizExtension';
 import katexExtension from './katexExtension';
-import * as JSONFormatter from 'json-formatter-js';
-
+import JSONFormatter from 'json-formatter-js';
 import 'katex';
-
-require("./style");
-require("./custom");
-
-alert("This is a test.")
+import "./style.css";
+import "./custom.css";
 
 let entry: any = null;
-let electron = nodeRequire('electron');
-let ipc = electron.ipcRenderer;
-let remote = electron.remote;
 ipc.send("ready");
 
 window.onerror = function(error, url, line) {
@@ -63,7 +57,7 @@ document.onkeydown = function(evt) {
 
 function Properties(props: any, collapsed: boolean) {
   let displayLevel = collapsed ? 0 : Infinity;
-  let formatter = new JSONFormatter.default.default(props, displayLevel);
+  let formatter = new JSONFormatter(props, displayLevel);
   return {
     oncreate: function(vnode: VnodeDOM<{},{}>) {
       vnode.dom.appendChild(formatter.render());

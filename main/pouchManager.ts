@@ -52,10 +52,8 @@ export module PouchManager {
         let localDbAddress = path.join(dbDirectory, "db");
         db = new pouchdb("db", {adapter: "memory"});
         await syncDb();
-        console.log(JSON.stringify(await db.allDocs()))
       }
       let indexes = await indexManager.getIndexedFields(db);
-      console.log(indexes);
       await db.createIndex({index: {fields: indexes}});
       await db.search({fields: indexes, build: true});
       return db;
