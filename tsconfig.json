@@ -5,13 +5,10 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "allowJs": false
   },
   "exclude": [
     "node_modules"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "useBabel": true,
-    "useCache": true
-  }
+  ]
 }

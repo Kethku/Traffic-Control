@@ -1,24 +1,61 @@
 import * as path from 'path';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as webpack from 'webpack';
-import { TsConfigPathsPlugin } from 'awesome-typescript-loader';
+var nodeExternals = require('webpack-node-externals');
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-function generateConfig(options?: any): webpack.Configuration {
+var genericPlugins = [
+  new ForkTsCheckerWebpackPlugin({
+    checkSyntacticErrors: true
+  })
+];
+
+function generateConfig(plugins = genericPlugins): webpack.Configuration {
   return {
     context: path.resolve('.'),
     module: {
       rules: [
         {
           test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader',
-          exclude: path.resolve(__dirname, "node_modules"),
-          query: options
+          exclude: /node_modules/,
+          use: [
+            { loader: 'cache-loader' },
+            {
+              loader: 'thread-loader',
+              options: {
+                works: require('os').cpus().length - 1
+              }
+            },
+            // {
+            //   loader: 'babel-loader',
+            //   options: {
+            //     cacheDirectory: true,
+            //     presets: [
+            //       "react",
+            //       [
+            //         "es2015",
+            //         {
+            //           "modules": false
+            //         }
+            //       ],
+            //       "es2016"
+            //     ]
+            //   }
+            // },
+            {
+              loader: 'ts-loader',
+              options: {
+                happyPackMode: true
+              }
+            }
+          ]
         }, {
           test: /\.css$/,
           loader: 'style-loader!css-loader',
           exclude: path.resolve(__dirname, "node_modules")
         }
-      ]    },
+      ]
+    },
     devServer: {
       inline: true,
       hot: true,
@@ -26,13 +63,14 @@ function generateConfig(options?: any): webpack.Configuration {
     },
     devtool: "source-map",
     resolve: {
-      extensions: ['.js', '.ts', '.tsx', '.jsx']
+      extensions: ['.ts', '.tsx', '.js', '.css']
     },
-    node: {__dirname: false}
+    node: {__dirname: false},
+    plugins: plugins
   }
 }
 
-function generateRendererConfig(options?: any) {
+function generateRendererConfig(plugins = genericPlugins) {
   return Object.assign({
     target: 'electron-renderer',
     externals: [
@@ -40,7 +78,7 @@ function generateRendererConfig(options?: any) {
         var IGNORES = [
           'electron'
         ];
-        return function (context: any, request: string, callback: any) {
+        return function (_context: any, request: string, callback: any) {
           if (IGNORES.indexOf(request) >= 0) {
             return callback(null, "require('" + request + "')");
           }
@@ -48,7 +86,7 @@ function generateRendererConfig(options?: any) {
         };
       })()
     ]
-  }, generateConfig(options));
+  }, generateConfig(plugins));
 }
 
 const commonOutput: webpack.Output = {
@@ -61,43 +99,42 @@ const commonOutput: webpack.Output = {
 module.exports = [
   Object.assign({
     target: 'electron',
-    entry: ['./main/main', 'babel-polyfill'],
+    entry: ['./main/main'],
+    // externals: [nodeExternals()],
     output: Object.assign({
       path: path.resolve(__dirname, "build"),
       publicPath: '/'
     }, commonOutput)
-  }, generateConfig({"include": [ "./main/**/*" ]})),
+  }, generateConfig()),
   Object.assign({
-    entry: ['./renderer/youtubePreload', 'babel-polyfill'],
+    entry: ['./renderer/youtubePreload'],
     output: Object.assign({
       path: path.resolve(__dirname, "build/renderer"),
       publicPath: '/renderer/'
     }, commonOutput)
-  }, generateRendererConfig({"include": [ "./renderer/youtubePreload.ts" ]})),
+  }, generateRendererConfig()),
   Object.assign({
-    entry: ['./renderer/inputBox/inputBox', 'babel-polyfill'],
+    entry: ['./renderer/inputBox/inputBox'],
     output: Object.assign({
       path: path.resolve(__dirname, "build/renderer/inputBox"),
       publicPath: '/renderer/inputBox/'
     }, commonOutput),
-    plugins: [
+  }, generateRendererConfig([
       new HtmlWebpackPlugin({
         title: 'Traffic Control Input',
         filename: 'inputBox.html'
       })
-    ]
-  }, generateRendererConfig({"include": [ "./renderer/inputBox/**/*" ]})),
+    ].concat(genericPlugins))),
   Object.assign({
-    entry: ['./renderer/entryRenderer/entryRenderer', 'babel-polyfill'],
+    entry: ['./renderer/entryRenderer/entryRenderer'],
     output: Object.assign({
       path: path.resolve(__dirname, "build/renderer/entryRenderer"),
       publicPath: '/renderer/entryRenderer/'
     }, commonOutput),
-    plugins: [
+  }, generateRendererConfig([
       new HtmlWebpackPlugin({
         title: 'Traffic Control Input',
         filename: 'entryRenderer.html'
       }),
-    ]
-  }, generateRendererConfig({"include": [ "./renderer/entryRenderer/**/*" ]}))
+    ].concat(genericPlugins)))
 ];

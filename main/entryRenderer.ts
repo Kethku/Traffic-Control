@@ -22,12 +22,44 @@ export function closeEntries() {
   entryWindows = [];
 }
 
+export function layoutWindows() {
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  let windowHeight = display.bounds.height - 10;
+  let focusedWindowWidth = Math.floor(display.bounds.width * 0.6) - 10;
+  let otherWindowWidth = Math.floor((display.bounds.width - 50) * 0.4 / (entryWindows.length - 1)) - 10;
+  let currentX = display.bounds.x + 25;
+  let currentY = display.bounds.y + 25;
+  for (let i = 0; i < entryWindows.length; i++) {
+    var entry = entryWindows[i];
+    entry.window.setPosition(currentX, currentY);
+    if (i == focusIndex) {
+      entry.window.setSize(focusedWindowWidth, windowHeight, false);
+      currentX += focusedWindowWidth + 10;
+    } else {
+      entry.window.setSize(otherWindowWidth, windowHeight, false);
+      currentX += otherWindowWidth + 10;
+    }
+  }
+}
+
 ipc.on('errorInWindow', (event: any, data: any) => {
   console.log(data);
 });
 
-ipc.on('closeEntryWindows', () => {
-  closeEntries();
+ipc.on('closeAll', closeEntries);
+
+ipc.on('closeEntry', () => {
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  let entryToClose = entryWindows[focusIndex];
+  entryToClose.free();
+  entryWindows = entryWindows.filter(entry => entry != entryToClose);
+
+  if (focusIndex >= entryWindows.length) {
+    focusIndex = 0;
+  }
+  entryWindows[focusIndex].window.focus();
+  layoutWindows();
 })
 
 ipc.on('entryShiftLeft', () => {
@@ -37,6 +69,7 @@ ipc.on('entryShiftLeft', () => {
     focusIndex = entryWindows.length - 1;
   }
   entryWindows[focusIndex].window.focus();
+  layoutWindows();
 });
 
 ipc.on('entryShiftRight', () => {
@@ -46,6 +79,7 @@ ipc.on('entryShiftRight', () => {
     focusIndex = 0;
   }
   entryWindows[focusIndex].window.focus();
+  layoutWindows();
 });
 
 ipc.on('deleteEntry', async () => {
@@ -77,16 +111,9 @@ ipc.on('editEntry', async () => {
 export function renderEntries(entries: any[]) {
   closeEntries();
   entries = entries.slice(0, 10);
-  let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-  let windowWidth = Math.floor(display.bounds.width / entries.length) - 20;
-  let windowHeight = display.bounds.height;
   for (let i = 0; i < entries.length; i++) {
     let entry = entries[i];
     let entryWindow = new BrowserWindow({
-      width: windowWidth,
-      height: windowHeight,
-      x: display.bounds.x + (windowWidth + 20) * i + 10,
-      y: Math.floor(display.bounds.y + display.bounds.height * 0.333),
       transparent: true,
       thickFrame: true,
       frame: false,
@@ -134,4 +161,5 @@ export function renderEntries(entries: any[]) {
 
     entryWindows.push({window: entryWindow, entry: entry, free: free});
   }
+  layoutWindows();
 }

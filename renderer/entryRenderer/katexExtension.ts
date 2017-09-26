@@ -1,4 +1,4 @@
-import katex from "katex";
+import * as katex from "katex";
 import * as $ from "jquery";
 
 let katexCache: { [katex: string]: string } = {};

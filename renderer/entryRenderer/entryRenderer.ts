@@ -26,7 +26,7 @@ let confirming: boolean = false;
 
 document.onkeydown = function(evt) {
   if (evt.key == "Escape" || evt.key == "q") {
-    ipc.send("closeEntryWindows");
+    ipc.send("closeAll");
   }
   if (evt.key == "h") {
     ipc.send("entryShiftLeft");
@@ -45,7 +45,7 @@ document.onkeydown = function(evt) {
     ipc.send("editEntry");
   }
   if (evt.key == "x") {
-    ipc.send("entryShiftRight");
+    ipc.send("closeCurrent");
     window.close();
   }
   if (evt.key == "n") {

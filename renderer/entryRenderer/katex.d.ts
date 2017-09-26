@@ -1,4 +1,4 @@
-declare module Katex {
+declare module katex {
   declare interface RenderingOptions {
     displayMode?: boolean;
     throwOnError?: boolean;
@@ -19,13 +19,11 @@ declare module Katex {
   }
 
   declare interface KatexStatic {
-    render(latex: string, element: HTMLElement, options?: RenderingOptions);
-    renderToString(latex: string, options?: RenderingOptions): string;
-    renderMathInElement(element: HTMLElement, options?: AutoRenderOptions);
   }
 }
 
 declare module "katex" {
-  declare var katex: Katex.KatexStatic;
-  export default katex;
+  export function render(latex: string, element: HTMLElement, options?: RenderingOptions);
+  export function renderToString(latex: string, options?: RenderingOptions): string;
+  export function renderMathInElement(element: HTMLElement, options?: AutoRenderOptions);
 }
