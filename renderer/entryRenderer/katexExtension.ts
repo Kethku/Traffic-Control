@@ -6,11 +6,7 @@ let katexCache: { [katex: string]: string } = {};
 function addLatexStyles() {
       if (!$('#katex-latex-styles').length) {
         $('head').append(`
-<style id="katex-latex-styles" type="text/css">
-.katex-latex {
-font-size: 20px;
-}
-</style>`);
+<link id="katex-latex-styles" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css" integrity="sha384-B41nY7vEWuDrE9Mr+J2nBL0Liu+nl/rBXTdpQal730oTHdlrlXHzYMOhDU60cwde" crossorigin="anonymous">`);
       }
 }
 
@@ -18,7 +14,7 @@ export default [
   {
     type: 'lang',
     regex: /\$([^]+?)\$/,
-    replace: function(s: any, match: any) {
+    replace: function(s: string, match: string) {
       addLatexStyles();
       return `
 <span class="katex-latex">

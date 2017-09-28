@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as webpack from 'webpack';
-var nodeExternals = require('webpack-node-externals');
 var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 var genericPlugins = [
@@ -26,22 +25,6 @@ function generateConfig(plugins = genericPlugins): webpack.Configuration {
                 works: require('os').cpus().length - 1
               }
             },
-            // {
-            //   loader: 'babel-loader',
-            //   options: {
-            //     cacheDirectory: true,
-            //     presets: [
-            //       "react",
-            //       [
-            //         "es2015",
-            //         {
-            //           "modules": false
-            //         }
-            //       ],
-            //       "es2016"
-            //     ]
-            //   }
-            // },
             {
               loader: 'ts-loader',
               options: {
@@ -100,7 +83,6 @@ module.exports = [
   Object.assign({
     target: 'electron',
     entry: ['./main/main'],
-    // externals: [nodeExternals()],
     output: Object.assign({
       path: path.resolve(__dirname, "build"),
       publicPath: '/'

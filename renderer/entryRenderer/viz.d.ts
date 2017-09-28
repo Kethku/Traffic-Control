@@ -1,4 +1,4 @@
-declare namespace Viz {
+declare namespace VizJs {
   interface VizImageOptions {
     href: string,
     width: number,
@@ -35,4 +35,7 @@ declare namespace Viz {
   }
 }
 
-declare var Viz: Viz.VizStatic;
+declare module "viz.js" {
+  declare var Viz : VizJs.VizStatic;
+  export = Viz;
+}

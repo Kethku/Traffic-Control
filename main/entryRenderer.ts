@@ -2,10 +2,13 @@ import {BrowserWindow, screen, ipcMain as ipc, globalShortcut} from "electron";
 import asyncUtils from "./async-utils";
 import formatUtils from "./formatUtils";
 import pouchManager from "./pouchManager";
-import editorManager from "./editorManager";
+import * as editorManager from "./editorManager";
 import * as debugManager from "./debugManager";
 import * as path from 'path';
 import * as url from 'url';
+
+const monitorMargin = 50;
+const windowBorder = 10;
 
 interface EntryWindow {
   window: Electron.BrowserWindow;
@@ -25,20 +28,20 @@ export function closeEntries() {
 export function layoutWindows() {
   let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
   let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-  let windowHeight = display.bounds.height - 10;
-  let focusedWindowWidth = Math.floor(display.bounds.width * 0.6) - 10;
-  let otherWindowWidth = Math.floor((display.bounds.width - 50) * 0.4 / (entryWindows.length - 1)) - 10;
-  let currentX = display.bounds.x + 25;
-  let currentY = display.bounds.y + 25;
+  let windowHeight = display.bounds.height - windowBorder;
+  let focusedWindowWidth = Math.floor((display.bounds.width - ((monitorMargin * 2) - windowBorder)) * 0.6) - windowBorder;
+  let otherWindowWidth = Math.floor((display.bounds.width - ((monitorMargin * 2) - windowBorder)) * 0.4 / (entryWindows.length - 1)) - windowBorder;
+  let currentX = display.bounds.x + monitorMargin;
+  let currentY = display.bounds.y + monitorMargin;
   for (let i = 0; i < entryWindows.length; i++) {
     var entry = entryWindows[i];
     entry.window.setPosition(currentX, currentY);
     if (i == focusIndex) {
       entry.window.setSize(focusedWindowWidth, windowHeight, false);
-      currentX += focusedWindowWidth + 10;
+      currentX += focusedWindowWidth + windowBorder;
     } else {
       entry.window.setSize(otherWindowWidth, windowHeight, false);
-      currentX += otherWindowWidth + 10;
+      currentX += otherWindowWidth + windowBorder;
     }
   }
 }
@@ -90,23 +93,11 @@ ipc.on('deleteEntry', async () => {
   entryWindows[focusIndex].window.close();
 });
 
-ipc.on('editEntry', async () => {
-  let db = await pouchManager.getDb();
+ipc.on('editEntry', () => {
   let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
   let entryWindow = entryWindows[focusIndex];
-  closeEntries();
-  let fileName = "c:/dev/Temp/entry.md";
-  try {
-    await asyncUtils.writeFile(fileName, formatUtils.produceFile(entryWindow.entry))
-  } catch (err) {
-    console.log(err);
-  }
-
-  await editorManager.editFile(fileName, true);
-  let contents = await asyncUtils.readFile(fileName, {encoding: 'utf8'}) as string;
-  let json = formatUtils.readFile(contents);
-  db.put(json);
-})
+  editorManager.editTempFile(entryWindow.entry);
+});
 
 export function renderEntries(entries: any[]) {
   closeEntries();
@@ -161,5 +152,9 @@ export function renderEntries(entries: any[]) {
 
     entryWindows.push({window: entryWindow, entry: entry, free: free});
   }
-  layoutWindows();
+
+  if (entryWindows.length != 0) {
+    setTimeout(() => entryWindows[0].window.focus(), 500);
+    layoutWindows();
+  }
 }

@@ -1,3 +1,5 @@
+import * as Viz from "viz.js";
+
 let graphCache: { [graph: string]: string } = {};
 
 export default {
@@ -10,9 +12,9 @@ export default {
     if (match in graphCache) {
       graphSVG = graphCache[match];
     } else {
-      graphSVG = Viz(match, {format: "svg"});
+      graphSVG = Viz(match, {format: "svg"}) as string;
       graphCache[match] = graphSVG;
     }
-    return `<div class="center">${graphSVG}</div>`;
+    return `<div>${graphSVG}</div>`;
   }
 }

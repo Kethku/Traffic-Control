@@ -11,3 +11,7 @@
     margin-left: 50%;
     transform: translateX(-50%);
 }
+
+.katex-display {
+    text-align: left !important;
+}
