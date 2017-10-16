@@ -17,12 +17,21 @@ interface EntryWindow {
 }
 
 let entryWindows: EntryWindow[] = [];
+let changesToken: PouchDB.Core.Changes<any> = null;
+
+export function unsubChanges() {
+  if (changesToken != null) {
+    changesToken.cancel();
+    changesToken = null;
+  }
+}
 
 export function closeEntries() {
   for (let window of entryWindows) {
     window.free();
   }
   entryWindows = [];
+  unsubChanges();
 }
 
 export function layoutWindows() {
@@ -46,62 +55,19 @@ export function layoutWindows() {
   }
 }
 
-ipc.on('errorInWindow', (event: any, data: any) => {
-  console.log(data);
-});
-
-ipc.on('closeAll', closeEntries);
-
-ipc.on('closeEntry', () => {
-  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
-  let entryToClose = entryWindows[focusIndex];
-  entryToClose.free();
-  entryWindows = entryWindows.filter(entry => entry != entryToClose);
-
-  if (focusIndex >= entryWindows.length) {
-    focusIndex = 0;
+export async function rerenderEntries() {
+  var db = await pouchManager.getDb();
+  for (var entryWindow of entryWindows) {
+    var newEntry = await db.get(entryWindow.entry._id);
+    entryWindow.entry = newEntry;
+    entryWindow.window.webContents.send('renderEntry', newEntry);
   }
-  entryWindows[focusIndex].window.focus();
-  layoutWindows();
-})
+}
 
-ipc.on('entryShiftLeft', () => {
-  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
-  focusIndex--;
-  if (focusIndex < 0) {
-    focusIndex = entryWindows.length - 1;
-  }
-  entryWindows[focusIndex].window.focus();
-  layoutWindows();
-});
-
-ipc.on('entryShiftRight', () => {
-  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
-  focusIndex++;
-  if (focusIndex >= entryWindows.length) {
-    focusIndex = 0;
-  }
-  entryWindows[focusIndex].window.focus();
-  layoutWindows();
-});
-
-ipc.on('deleteEntry', async () => {
-  let db = await pouchManager.getDb();
-  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
-  let entry = entryWindows[focusIndex].entry;
-  db.remove(entry);
-  entryWindows[focusIndex].window.close();
-});
-
-ipc.on('editEntry', () => {
-  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
-  let entryWindow = entryWindows[focusIndex];
-  editorManager.editTempFile(entryWindow.entry);
-});
-
-export function renderEntries(entries: any[]) {
+export async function renderEntries(entries: any[]) {
   closeEntries();
   entries = entries.slice(0, 10);
+  var db = await pouchManager.getDb();
   for (let i = 0; i < entries.length; i++) {
     let entry = entries[i];
     let entryWindow = new BrowserWindow({
@@ -157,4 +123,65 @@ export function renderEntries(entries: any[]) {
     setTimeout(() => entryWindows[0].window.focus(), 500);
     layoutWindows();
   }
+
+  changesToken = db.changes({
+    since: 'now',
+    live: true,
+    doc_ids: entryWindows.map(entryWindow => entryWindow.entry._id)
+  }).on('change', (change) => {
+    rerenderEntries();
+  });
 }
+
+ipc.on('errorInWindow', (event: any, data: any) => {
+  console.log(data);
+});
+
+ipc.on('closeAll', closeEntries);
+
+ipc.on('closeEntry', () => {
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  let entryToClose = entryWindows[focusIndex];
+  entryToClose.free();
+  entryWindows = entryWindows.filter(entry => entry != entryToClose);
+
+  if (focusIndex >= entryWindows.length) {
+    focusIndex = 0;
+  }
+  entryWindows[focusIndex].window.focus();
+  layoutWindows();
+})
+
+ipc.on('entryShiftLeft', () => {
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  focusIndex--;
+  if (focusIndex < 0) {
+    focusIndex = entryWindows.length - 1;
+  }
+  entryWindows[focusIndex].window.focus();
+  layoutWindows();
+});
+
+ipc.on('entryShiftRight', () => {
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  focusIndex++;
+  if (focusIndex >= entryWindows.length) {
+    focusIndex = 0;
+  }
+  entryWindows[focusIndex].window.focus();
+  layoutWindows();
+});
+
+ipc.on('deleteEntry', async () => {
+  let db = await pouchManager.getDb();
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  let entry = entryWindows[focusIndex].entry;
+  db.remove(entry);
+  entryWindows[focusIndex].window.close();
+});
+
+ipc.on('editEntry', () => {
+  let focusIndex = entryWindows.findIndex(w => w.window.isFocused());
+  let entryWindow = entryWindows[focusIndex];
+  editorManager.editTempFile(entryWindow.entry);
+});

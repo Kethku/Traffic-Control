@@ -104,11 +104,15 @@ function Entry() {
 function Renderer() {
   return {
     view: function() {
-      if (confirming) {
-        return m("h3", "Are you sure?");
-      } else {
-        let colorClass = remote.getCurrentWindow().isFocused() ? '.bg-white' : '.bg-light-silver'
-        return m(colorClass + ".pa3", m(Entry));
+      let colorClass = remote.getCurrentWindow().isFocused() ? '.bg-white' : '.bg-light-silver'
+      try {
+        if (confirming) {
+          return m("h3" + colorClass, "Are you sure?");
+        } else {
+          return m(colorClass + ".pa3", m(Entry));
+        }
+      } catch (err) {
+        return m("h3" + colorClass, "Error: " + err);
       }
     }
   }

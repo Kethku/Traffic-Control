@@ -1,6 +1,6 @@
 import * as moment from "moment";
+import * as editorManager from "../editorManager";
 import asyncUtils from "../async-utils";
-import editorManager from "../editorManager";
 import pouchManager from "../pouchManager";
 import formatUtils from "../formatUtils";
 import {InputRecieved, ProduceCompletions} from "../inputBox";
@@ -8,21 +8,13 @@ import {InputRecieved, ProduceCompletions} from "../inputBox";
 export async function newEntry(tag?: string) {
   let db = await pouchManager.getDb();
   let now = moment.utc().valueOf();
-  let fileName = "c:/dev/Temp/entry.md";
   let entryName = now.toString();
   let entry: any = { };
   if (tag) entry[tag] = "";
-  entry["_id"] = entryName
-  try {
-    await asyncUtils.writeFile(fileName, formatUtils.produceFile(entry));
-  } catch (err) {
-    console.log(err);
-  }
+  entry["_id"] = entryName;
+  console.log(entry);
 
-  await editorManager.editFile(fileName, true);
-  let contents = await asyncUtils.readFile(fileName, {encoding: "utf8"}) as string;
-  let json = formatUtils.readFile(contents);
-  db.put(json);
+  await editorManager.editTempFile(entry);
 }
 
 export default function setup() {
