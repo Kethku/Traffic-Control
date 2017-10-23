@@ -89,12 +89,17 @@ module.exports = [
     }, commonOutput)
   }, generateConfig()),
   Object.assign({
-    entry: ['./renderer/youtubePreload'],
+    entry: ['./renderer/youtube/youtube'],
     output: Object.assign({
-      path: path.resolve(__dirname, "build/renderer"),
-      publicPath: '/renderer/'
+      path: path.resolve(__dirname, "build/renderer/youtube"),
+      publicPath: '/renderer/youtube/'
     }, commonOutput)
-  }, generateRendererConfig()),
+  }, generateRendererConfig([
+    new HtmlWebpackPlugin({
+      title: 'YouTube Player',
+      filename: 'youtube.html'
+    })
+  ].concat(genericPlugins))),
   Object.assign({
     entry: ['./renderer/inputBox/inputBox'],
     output: Object.assign({
@@ -102,11 +107,11 @@ module.exports = [
       publicPath: '/renderer/inputBox/'
     }, commonOutput),
   }, generateRendererConfig([
-      new HtmlWebpackPlugin({
-        title: 'Traffic Control Input',
-        filename: 'inputBox.html'
-      })
-    ].concat(genericPlugins))),
+    new HtmlWebpackPlugin({
+      title: 'Traffic Control Input',
+      filename: 'inputBox.html'
+    })
+  ].concat(genericPlugins))),
   Object.assign({
     entry: ['./renderer/entryRenderer/entryRenderer'],
     output: Object.assign({
@@ -114,9 +119,9 @@ module.exports = [
       publicPath: '/renderer/entryRenderer/'
     }, commonOutput),
   }, generateRendererConfig([
-      new HtmlWebpackPlugin({
-        title: 'Traffic Control Input',
-        filename: 'entryRenderer.html'
-      }),
-    ].concat(genericPlugins)))
+    new HtmlWebpackPlugin({
+      title: 'Traffic Control Input',
+      filename: 'entryRenderer.html'
+    }),
+  ].concat(genericPlugins)))
 ];

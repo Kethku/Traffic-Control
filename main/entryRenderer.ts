@@ -81,7 +81,6 @@ export async function renderEntries(entries: any[]) {
     function onReady(event: any) {
       if (event.sender === entryWindow.webContents) {
         entryWindow.webContents.send('renderEntry', entry);
-        entryWindow.show();
       }
     }
 
