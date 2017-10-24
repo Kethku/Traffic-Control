@@ -21,34 +21,35 @@ export function createYoutubePlayer(youtubeUrl: string) {
   let regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
   let results = youtubeUrl.match(regex);
   if (results) {
+    var preloadPath = path.join(__dirname, "renderer/youtube/main.js");
+    console.log("Preload " + preloadPath);
     youtubeWindow = new BrowserWindow({
       skipTaskbar: true,
       transparent: true,
       alwaysOnTop: true,
       frame: false,
       thickFrame: true,
-      show: true
+      show: false,
+      webPreferences: {
+        preload: preloadPath
+      }
     });
 
-    function onReady(event: any) {
+    youtubeWindow.once('ready-to-show', () => {
       console.log("youtube ready");
-      if (event.sender === youtubeWindow.webContents) {
-        let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-        let width = Math.floor(display.bounds.width * 0.25);
-        let height = Math.floor(width * 0.5625);
-        let bounds = {
-          x: display.bounds.x + display.bounds.width - width - 25,
-          y: display.bounds.y + display.bounds.height - height - 65,
-          width: width, height: height
-        };
-        youtubeWindow.setContentBounds(bounds);
-        youtubeWindow.webContents.openDevTools({mode: "detach"});
-        youtubeWindow.webContents.send("showYoutubeVideo", results[1]);
-      }
-    }
+      youtubeWindow.show();
+      let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+      let width = Math.floor(display.bounds.width * 0.25);
+      let height = Math.floor(width * 0.5625);
+      let bounds = {
+        x: display.bounds.x + display.bounds.width - width - 25,
+        y: display.bounds.y + display.bounds.height - height - 65,
+        width: width, height: height
+      };
+      youtubeWindow.setContentBounds(bounds);
+    });
 
     function free() {
-      ipc.removeListener('ready', onReady);
       closeYoutubePlayer();
     }
 
@@ -57,15 +58,13 @@ export function createYoutubePlayer(youtubeUrl: string) {
       var windowBounds = youtubeWindow.getContentBounds();
       cursorScreenPoint.x -= windowBounds.x;
       cursorScreenPoint.y -= windowBounds.y;
-      if (cursorScreenPoint.x > -150 && cursorScreenPoint.x < windowBounds.width + 150 &&
-          cursorScreenPoint.y > -150 && cursorScreenPoint.y < windowBounds.height + 150) {
+      if (cursorScreenPoint.x > -250 && cursorScreenPoint.x < windowBounds.width + 250 &&
+          cursorScreenPoint.y > -250 && cursorScreenPoint.y < windowBounds.height + 250) {
         youtubeWindow.webContents.send("mouseMoved", cursorScreenPoint);
       }
-    }, 100);
+    }, 16);
 
-    ipc.on('ready', onReady);
-
-    youtubeWindow.loadURL(path.join(debugManager.host, "renderer/youtube/youtube.html"));
+    youtubeWindow.loadURL(`http://www.youtube.com/embed/${results[1]}?rel=0&autoplay=1&frameborder="0"`);
     youtubeWindow.setIgnoreMouseEvents(true);
   }
 }

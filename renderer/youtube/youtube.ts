@@ -1,46 +1,33 @@
 import {ipcRenderer as ipc, remote} from 'electron';
-import * as m from "mithril";
-import {Vnode, VnodeDOM} from 'mithril';
 
-let id: string = null;
-let mousePos: {x: number, y: number} = null;
-
-ipc.send("ready");
 window.onerror = function(error, url, line) {
   ipc.send('errorInWindow', error);
 }
 
-ipc.on("showYoutubeVideo", (event: any, youtubeId: string) => {
-  id = youtubeId;
-  m.redraw();
+ipc.on("mouseMoved", (event: any, newMousePos: {x: number, y: number}) => {
+  console.log(JSON.stringify(newMousePos));
+  if (document.body != null) {
+    document.body.style.clipPath = `polygon(${clipPoly(newMousePos.x, newMousePos.y)})`;
+  }
 });
 
-ipc.on("mouseMoved", (event: any, newMousePos: {x: number, y: number}) => {
-  mousePos = newMousePos;
-  m.redraw();
-})
-
-function YoutubePlayer() {
-  return {
-    view: function() {
-      console.log(mousePos);
-      var mouseProps: any = {r: 100};
-      if (mousePos != null) {
-        mouseProps.cx = mousePos.x;
-        mouseProps.cy = mousePos.y;
-      }
-      return m("app", [
-        m("svg",
-          m("clipPath#clipPath", {clipPathUnits: "objectBoundingBox"},
-            m("circle", mouseProps)
-           )
-         ),
-        m("iframe.player", {src: `http://www.youtube.com/embed/${id}?rel=0&autoplay=1&frameborder="0"`, style: {
-          clipPath: "url(#clipPath)"
-        }})
-      ]);
-    }
+function clipPoly(x: number, y: number) {
+  var points = [];
+  var radius = 200;
+  points.push(`0px 0px`);
+  points.push(`0px ${window.innerHeight}px`);
+  points.push(`${window.innerWidth}px ${window.innerHeight}px`);
+  points.push(`${window.innerWidth}px 0px`);
+  points.push(`${x}px 0px`);
+  for (var i = 0; i <= 30; i++) {
+    var theta = i * 2 * Math.PI / 30 - Math.PI / 2;
+    points.push(`${x + radius * Math.cos(theta)}px ${y + radius * Math.sin(theta)}px`);
   }
+  points.push(`${x}px 0px`);
+  return points.join(',');
 }
 
-m.mount(document.body, YoutubePlayer);
+document.addEventListener("DOMContentLoaded", function(event) {
+  document.body.style.background = "rgba(0,0,0,0)";
+  console.log("Preload run");
+});
