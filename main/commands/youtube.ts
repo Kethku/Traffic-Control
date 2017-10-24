@@ -47,6 +47,8 @@ export function createYoutubePlayer(youtubeUrl: string) {
         width: width, height: height
       };
       youtubeWindow.setContentBounds(bounds);
+      youtubeWindow.webContents.send("mouseMoved", {x: 0, y: 0});
+      youtubeWindow.webContents.openDevTools({mode: "detach"});
     });
 
     function free() {
