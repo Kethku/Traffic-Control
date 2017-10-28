@@ -1,4 +1,7 @@
 import {ipcRenderer as ipc, remote} from 'electron';
+import * as gkm from 'gkm';
+
+var ctrlDown = false;
 
 window.onerror = function(error, url, line) {
   ipc.send('errorInWindow', error);
@@ -13,7 +16,7 @@ ipc.on("mouseMoved", (event: any, newMousePos: {x: number, y: number}) => {
 
 function clipPoly(x: number, y: number) {
   var points = [];
-  var radius = 200;
+  var radius = 125;
   points.push(`0px 0px`);
   points.push(`0px ${window.innerHeight}px`);
   points.push(`${window.innerWidth}px ${window.innerHeight}px`);
@@ -28,6 +31,13 @@ function clipPoly(x: number, y: number) {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  document.body.style.background = "rgba(0,0,0,0)";
+  var style = document.createElement("style");
+  style.type = "text/css";
+  style.appendChild(document.createTextNode(`
+  body {
+      background: rgba(0,0,0,0) !important;
+  }
+  `));
+  document.head.appendChild(style);
   console.log("Preload run");
 });

@@ -7,6 +7,7 @@ import * as debugManager from "../debugManager";
 
 let youtubeWindow: Electron.BrowserWindow;
 let timeout: any = null;
+var ctrlDown = false;
 
 export function closeYoutubePlayer() {
   if (youtubeWindow) {
@@ -47,7 +48,7 @@ export function createYoutubePlayer(youtubeUrl: string) {
         width: width, height: height
       };
       youtubeWindow.setContentBounds(bounds);
-      youtubeWindow.webContents.send("mouseMoved", {x: 0, y: 0});
+      youtubeWindow.webContents.send("mouseMoved", {x: -100000, y: -10000});
       youtubeWindow.webContents.openDevTools({mode: "detach"});
     });
 
@@ -62,7 +63,11 @@ export function createYoutubePlayer(youtubeUrl: string) {
       cursorScreenPoint.y -= windowBounds.y;
       if (cursorScreenPoint.x > -250 && cursorScreenPoint.x < windowBounds.width + 250 &&
           cursorScreenPoint.y > -250 && cursorScreenPoint.y < windowBounds.height + 250) {
-        youtubeWindow.webContents.send("mouseMoved", cursorScreenPoint);
+        if (ctrlDown) {
+          youtubeWindow.webContents.send("mouseMoved", cursorScreenPoint);
+        } else {
+          youtubeWindow.webContents.send("mouseMoved", {x: -100000, y: -10000});
+        }
       }
     }, 16);
 
