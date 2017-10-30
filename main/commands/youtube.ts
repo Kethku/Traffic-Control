@@ -1,6 +1,7 @@
 import {BrowserWindow, screen, ipcMain as ipc, globalShortcut} from "electron";
 import * as path from 'path';
 import * as url from 'url';
+import * as edge from 'edge';
 
 import {InputRecieved, ProduceCompletions} from "../inputBox";
 import * as debugManager from "../debugManager";
@@ -8,6 +9,17 @@ import * as debugManager from "../debugManager";
 let youtubeWindow: Electron.BrowserWindow;
 let timeout: any = null;
 var ctrlDown = false;
+
+var edgeTest = edge.func(`
+  async () => {
+    return "This is a test of edge.";
+  }
+`)
+
+edgeTest(null, (error, result) => {
+  if (error) console.log(error);
+  console.log(result);
+});
 
 export function closeYoutubePlayer() {
   if (youtubeWindow) {
