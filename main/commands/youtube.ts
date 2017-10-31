@@ -1,25 +1,13 @@
 import {BrowserWindow, screen, ipcMain as ipc, globalShortcut} from "electron";
 import * as path from 'path';
 import * as url from 'url';
-import * as edge from 'edge';
 
 import {InputRecieved, ProduceCompletions} from "../inputBox";
 import * as debugManager from "../debugManager";
 
 let youtubeWindow: Electron.BrowserWindow;
 let timeout: any = null;
-var ctrlDown = false;
 
-var edgeTest = edge.func(`
-  async () => {
-    return "This is a test of edge.";
-  }
-`)
-
-edgeTest(null, (error, result) => {
-  if (error) console.log(error);
-  console.log(result);
-});
 
 export function closeYoutubePlayer() {
   if (youtubeWindow) {
@@ -61,7 +49,7 @@ export function createYoutubePlayer(youtubeUrl: string) {
       };
       youtubeWindow.setContentBounds(bounds);
       youtubeWindow.webContents.send("mouseMoved", {x: -100000, y: -10000});
-      youtubeWindow.webContents.openDevTools({mode: "detach"});
+      // youtubeWindow.webContents.openDevTools({mode: "detach"});
     });
 
     function free() {
@@ -75,11 +63,7 @@ export function createYoutubePlayer(youtubeUrl: string) {
       cursorScreenPoint.y -= windowBounds.y;
       if (cursorScreenPoint.x > -250 && cursorScreenPoint.x < windowBounds.width + 250 &&
           cursorScreenPoint.y > -250 && cursorScreenPoint.y < windowBounds.height + 250) {
-        if (ctrlDown) {
-          youtubeWindow.webContents.send("mouseMoved", cursorScreenPoint);
-        } else {
-          youtubeWindow.webContents.send("mouseMoved", {x: -100000, y: -10000});
-        }
+        youtubeWindow.webContents.send("mouseMoved", cursorScreenPoint);
       }
     }, 16);
 
