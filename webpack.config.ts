@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as webpack from 'webpack';
 var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -86,7 +87,8 @@ module.exports = [
     output: Object.assign({
       path: path.resolve(__dirname, "build"),
       publicPath: '/'
-    }, commonOutput)
+    }, commonOutput),
+    externals: fs.readdirSync("node_modules").map((mod) => "commonjs " + mod)
   }, generateConfig()),
   Object.assign({
     entry: ['./renderer/youtube/youtube'],

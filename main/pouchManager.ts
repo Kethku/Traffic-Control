@@ -1,13 +1,13 @@
 import * as os from "os";
 import * as path from "path";
-import PouchDB from "pouchdb";
+import * as PouchDB from "pouchdb";
 import * as PouchQuickSearch from "pouchdb-quick-search";
 import * as PouchFind from "pouchdb-find";
 import asyncUtils from "./async-utils";
 import indexManager from "./indexManager";
 import * as settingsManager from "./settingsManager";
 
-var pouchdb = PouchDB
+var pouchdb: PouchDB.Static = require("pouchdb").default
   .plugin(require('pouchdb-quick-search'))
   .plugin(require('pouchdb-find').default)
   .plugin(require('pouchdb-adapter-memory').default);

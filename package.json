@@ -30,7 +30,6 @@
     "cache-loader": "^1.0.3",
     "css-loader": "^0.28.5",
     "del": "^2.2.2",
-    "electron": "^1.8.0",
     "fork-ts-checker-webpack-plugin": "^0.2.8",
     "html-webpack-plugin": "^2.30.1",
     "json-formatter-js": "^2.2.0",
@@ -44,7 +43,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
-    "edge": "^7.10.1",
+    "electron": "^1.7.9",
     "express": "^4.15.4",
     "gkm": "^0.1.0",
     "jquery": "^3.2.1",

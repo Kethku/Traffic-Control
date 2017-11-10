@@ -8,7 +8,6 @@ import * as debugManager from "../debugManager";
 let youtubeWindow: Electron.BrowserWindow;
 let timeout: any = null;
 
-
 export function closeYoutubePlayer() {
   if (youtubeWindow) {
     youtubeWindow.destroy();

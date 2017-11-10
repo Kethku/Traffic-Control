@@ -1,5 +1,4 @@
 import {ipcRenderer as ipc, remote} from 'electron';
-import * as gkm from 'gkm';
 
 var ctrlDown = false;
 
