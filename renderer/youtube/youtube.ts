@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   style.appendChild(document.createTextNode(`
   body {
       background: rgba(0,0,0,0) !important;
+      opacity: 0.8 !important;
   }
   `));
   document.head.appendChild(style);
