@@ -103,6 +103,15 @@ export async function renderEntries(entries: any[]) {
       }
     }
 
+    function handleRedirect(e: any, url: string) {
+      if(url != entryWindow.webContents.getURL()) {
+        e.preventDefault()
+        require('electron').shell.openExternal(url)
+      }
+    }
+    entryWindow.webContents.on('will-navigate', handleRedirect)
+    entryWindow.webContents.on('new-window', handleRedirect)
+
     ipc.on('ready', onReady);
 
     entryWindow.on('closed', () => {
