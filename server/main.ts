@@ -1,9 +1,5 @@
 import {app, globalShortcut} from 'electron';
 import inputBox from './inputBox';
-import youtube from './commands/youtube';
-import newEntry from "./commands/db-new";
-import recent from "./commands/db-recent";
-import query from "./commands/db-query";
 
 import * as debugManager from "./debugManager";
 import * as express from 'express';
@@ -13,10 +9,6 @@ require('source-map-support').install();
 
 function setup() {
   inputBox();
-  youtube();
-  newEntry();
-  recent();
-  query();
 
   if (!debugManager.debug) {
     let expressApp = express();

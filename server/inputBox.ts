@@ -30,7 +30,7 @@ export function createInputBox() {
   });
 
   inputBoxWindow.setBounds(display.bounds);
-  inputBoxWindow.loadURL(path.join(debugManager.host, "renderer/inputBox/inputBox.html"));
+  inputBoxWindow.loadURL(path.join(debugManager.host, "inputBox/inputBox.html"));
   inputBoxWindow.setIgnoreMouseEvents(true);
 
   inputBoxWindow.on('blur', () => {

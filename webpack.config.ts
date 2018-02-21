@@ -83,7 +83,7 @@ const commonOutput: webpack.Output = {
 module.exports = [
   Object.assign({
     target: 'electron',
-    entry: ['./main/main'],
+    entry: ['./server/main'],
     output: Object.assign({
       path: path.resolve(__dirname, "build"),
       publicPath: '/'
@@ -91,34 +91,15 @@ module.exports = [
     externals: fs.readdirSync("node_modules").map((mod) => "commonjs " + mod)
   }, generateConfig()),
   Object.assign({
-    entry: ['./renderer/youtube/youtube'],
+    entry: ['./inputBox/inputBox'],
     output: Object.assign({
-      path: path.resolve(__dirname, "build/renderer/youtube"),
-      publicPath: '/renderer/youtube/'
-    }, commonOutput)
-  }, generateRendererConfig()),
-  Object.assign({
-    entry: ['./renderer/inputBox/inputBox'],
-    output: Object.assign({
-      path: path.resolve(__dirname, "build/renderer/inputBox"),
-      publicPath: '/renderer/inputBox/'
+      path: path.resolve(__dirname, "build/inputBox"),
+      publicPath: '/inputBox/'
     }, commonOutput),
   }, generateRendererConfig([
       new HtmlWebpackPlugin({
         title: 'Traffic Control Input',
         filename: 'inputBox.html'
       })
-    ].concat(genericPlugins))),
-  Object.assign({
-    entry: ['./renderer/entryRenderer/entryRenderer'],
-    output: Object.assign({
-      path: path.resolve(__dirname, "build/renderer/entryRenderer"),
-      publicPath: '/renderer/entryRenderer/'
-    }, commonOutput),
-  }, generateRendererConfig([
-      new HtmlWebpackPlugin({
-        title: 'Traffic Control Input',
-        filename: 'entryRenderer.html'
-      }),
     ].concat(genericPlugins)))
 ];
