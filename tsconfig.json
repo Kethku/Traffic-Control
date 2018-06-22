@@ -2,11 +2,16 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "allowJs": false
+    "allowJs": false,
+    "lib": [
+      "DOM",
+      "es2017"
+    ]
   },
   "exclude": [
     "node_modules"

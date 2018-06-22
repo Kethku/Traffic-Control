@@ -20,18 +20,24 @@ export function closeInputBox() {
 export function createInputBox() {
   closeInputBox();
   let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+
   inputBoxWindow = new BrowserWindow({
     skipTaskbar: true,
     transparent: true,
     alwaysOnTop: true,
     thickFrame: true,
     frame: false,
-    useContentSize: true
+    useContentSize: true,
+    show: false
   });
 
-  inputBoxWindow.setBounds(display.bounds);
   inputBoxWindow.loadURL(path.join(debugManager.host, "inputBox/inputBox.html"));
+  inputBoxWindow.setBounds(display.bounds);
   inputBoxWindow.setIgnoreMouseEvents(true);
+
+  inputBoxWindow.once('ready-to-show', () => {
+    inputBoxWindow.show();
+  });
 
   inputBoxWindow.on('blur', () => {
     if (!inputBoxWindow.webContents.isDevToolsFocused()) {

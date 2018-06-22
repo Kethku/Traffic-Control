@@ -12,6 +12,7 @@ var genericPlugins = [
 
 function generateConfig(plugins = genericPlugins): webpack.Configuration {
   return {
+    mode: "development",
     context: path.resolve('.'),
     module: {
       rules: [
@@ -82,7 +83,7 @@ const commonOutput: webpack.Output = {
 
 module.exports = [
   Object.assign({
-    target: 'electron',
+    target: 'electron-main',
     entry: ['./server/main'],
     output: Object.assign({
       path: path.resolve(__dirname, "build"),
