@@ -19,7 +19,6 @@ function generateConfig(plugins = genericPlugins) {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: [
-                        { loader: 'cache-loader' },
                         {
                             loader: 'thread-loader',
                             options: {

@@ -2,11 +2,12 @@ import {BrowserWindow, screen, ipcMain, globalShortcut} from "electron";
 import * as path from 'path';
 import * as url from 'url';
 
-import {EventManager1, PollManager1} from "./eventManager";
+import {EventManager0, EventManager1, PollManager1} from "./eventManager";
 import * as debugManager from "./debugManager";
 
 let inputBoxWindow: Electron.BrowserWindow;
 
+export var InputBoxShown = new EventManager0();
 export var InputRecieved = new EventManager1<string>();
 export var ProduceCompletions = new PollManager1<string, string>();
 
@@ -18,6 +19,7 @@ export function closeInputBox() {
 }
 
 export function createInputBox() {
+  InputBoxShown.Publish();
   closeInputBox();
   let display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
 

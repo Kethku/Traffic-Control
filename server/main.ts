@@ -1,9 +1,10 @@
 import {app, globalShortcut} from 'electron';
 import inputBox from './inputBox';
 
-import * as debugManager from "./debugManager";
+import * as debugManager from './debugManager';
 import * as express from 'express';
 import * as path from 'path';
+import './installedApps';
 
 require('source-map-support').install();
 
