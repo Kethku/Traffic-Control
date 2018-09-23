@@ -1,5 +1,2 @@
-node_modules/
-build/
-.awcache/
-.cache-loader/
-npm-debug.log
+bin/
+obj/
