@@ -1,0 +1,39 @@
+﻿<Window x:Class="TrafficControl.Views.InputBoxView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cal="http://www.caliburnproject.org"
+        mc:Ignorable="d"
+        Title="Traffic Control" Height="450" Width="800"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Opacity="{Binding Opacity}"
+        Left="{Binding Left}"
+        Top="{Binding Top}"
+        WindowState="{Binding WindowState}"
+        cal:Message.Attach="
+            [Event Closing] = [Action Closing($eventArgs)];
+            [Event Deactivated] = [Action HideInputBox]">
+    <StackPanel>
+        <StackPanel Background="#101010">
+            <TextBox x:Name="Input" 
+                     Background="Transparent"
+                     Foreground="White" 
+                     FontSize="20" 
+                     Padding="10"
+                     cal:Message.Attach="
+                         [Event LostFocus] = [Action HideInputBox]; 
+                         [Event TextChanged] = [Action TextChanged]; 
+                         [Key Escape] = [Action HideInputBox]; 
+                         [Key Enter] = [Action SendInput]; 
+                         [Key Tab] = [Action CycleCompletionDown($eventArgs)]; 
+                         [Gesture Shift+Tab] = [Action CycleCompletionUp($eventArgs)]"></TextBox>
+            <ItemsControl x:Name="CompletionResults"/>
+        </StackPanel>
+    </StackPanel>
+</Window>
