@@ -21,7 +21,7 @@ namespace TrafficControl
     public class TrafficControl : Application, IHandle<ProduceCompletionsEvent>, IHandle<InputEvent>
     {
         public const string AppName = "TrafficControl";
-        public const string GithubUrl = "https://github.com/Kethku/Traffic-Control";
+        public const string UpdateUrl = "http://02credits.ddns.net/traffic-control";
 
         public const string QuitCommand = "quit";
         public const string HelpCommand = "help";
@@ -68,10 +68,10 @@ namespace TrafficControl
             }
         }
 
-        public static async void SetupSquirrel()
+        public static void SetupSquirrel()
         {
             if (!Debugger.IsAttached) {
-                using (var updateManager = await UpdateManager.GitHubUpdateManager(GithubUrl))
+                using (var updateManager = new UpdateManager(UpdateUrl))
                 {
                     SquirrelAwareApp.HandleEvents(
                       onInitialInstall: v =>
@@ -80,6 +80,7 @@ namespace TrafficControl
                       },
                       onAppUpdate: v => 
                       {
+                          UpdateFlagUtils.SetUpdateFlag();
                           updateManager.CreateShortcutForThisExe();
                       },
                       onAppUninstall: v => 
@@ -95,7 +96,7 @@ namespace TrafficControl
         {
             if (!Debugger.IsAttached) {
                 ReleaseEntry release = null;
-                using (var updateManager = await UpdateManager.GitHubUpdateManager(GithubUrl))
+                using (var updateManager = new UpdateManager(UpdateUrl))
                 {
                     var updateInfo = await updateManager.CheckForUpdate();
                     if (updateInfo.ReleasesToApply.Any())
@@ -122,9 +123,10 @@ namespace TrafficControl
         {
             if (NeedsRestarted)
             {
-                using (var updateManager = await UpdateManager.GitHubUpdateManager(GithubUrl))
+                using (var updateManager = new UpdateManager(UpdateUrl))
                 {
-                    UpdateManager.RestartApp();
+                    await UpdateManager.RestartAppWhenExited();
+                    Current.Shutdown();
                 }
             }
         }

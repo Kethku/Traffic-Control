@@ -3,5 +3,6 @@ obj/
 v15/
 packages/
 Releases/
+LiveReleases/
 .vs/
 *.nupkg

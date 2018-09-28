@@ -120,6 +120,7 @@
     <Compile Include="Events.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="PipManager.cs" />
+    <Compile Include="UpdateFlagUtils.cs" />
     <Compile Include="WindowsUtils.cs" />
     <Compile Include="TrafficControl.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />

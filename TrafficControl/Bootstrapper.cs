@@ -95,6 +95,10 @@ namespace TrafficControl
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<InputBoxViewModel>();
+            if (UpdateFlagUtils.ReadFlagAndReset())
+            {
+                WindowsUtils.ShowNotification("Traffic Control Updated", "Traffic control has updated. Check help dialog for details.");
+            }
         }
 
         public void ShowHelp()
