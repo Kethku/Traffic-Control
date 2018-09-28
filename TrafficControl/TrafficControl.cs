@@ -115,10 +115,6 @@ namespace TrafficControl
                         NeedsRestarted = true;
                     }
                 }
-                else
-                {
-                    NeedsRestarted = false;
-                }
             }
         }
 
