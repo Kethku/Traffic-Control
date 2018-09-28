@@ -29,9 +29,9 @@ namespace TrafficControl
         public static Bootstrapper Bootstrapper { get; set; }
 
         public static bool NeedsRestarted { get; set; }
+        public static bool FirstRun { get; set; }
 
         private static Mutex singleAppMutex;
-        private static bool firstRun = false;
 
         [STAThread]
         public static void Main()
@@ -62,7 +62,7 @@ namespace TrafficControl
         private static void OnStartup(object sender, StartupEventArgs e)
         {
             Bootstrapper.EventAggregator.Subscribe(sender);
-            if (firstRun)
+            if (FirstRun)
             {
                 Bootstrapper.ShowHelp();
             }
@@ -86,7 +86,7 @@ namespace TrafficControl
                       {
                           updateManager.RemoveShortcutForThisExe();
                       },
-                      onFirstRun: () => firstRun = true);
+                      onFirstRun: () => FirstRun = true);
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace TrafficControl
                     var updateInfo = await updateManager.CheckForUpdate();
                     if (updateInfo.ReleasesToApply.Any())
                     {
-                        WindowsUtils.ShowNotification("Traffic Control Updating", "Traffic Control is updating and will be restart shortly");
+                        WindowsUtils.ShowNotification("Traffic Control Updating", "Traffic Control is updating and will restart when finished.");
                         release = await updateManager.UpdateApp();
                     }
                 }

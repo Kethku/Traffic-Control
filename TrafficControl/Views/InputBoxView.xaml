@@ -30,7 +30,7 @@
                      cal:Message.Attach="
                          [Event LostFocus] = [Action HideInputBox]; 
                          [Event TextChanged] = [Action TextChanged]; 
-                         [Key Escape] = [Action HideInputBox]; 
+                         [Key Escape] = [Action CancelInput]; 
                          [Key Enter] = [Action SendInput]; 
                          [Key Tab] = [Action CycleCompletionDown($eventArgs)]; 
                          [Gesture Shift+Tab] = [Action CycleCompletionUp($eventArgs)]"></TextBox>

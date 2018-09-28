@@ -95,7 +95,6 @@ namespace TrafficControl
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<InputBoxViewModel>();
-            WindowsUtils.ShowNotification("Traffic Control Running", "Press Control+Space to bring up the input box");
         }
 
         public void ShowHelp()

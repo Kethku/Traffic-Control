@@ -94,7 +94,15 @@ namespace TrafficControl.ViewModels
         public void SendInput()
         {
             Bootstrapper.EventAggregator.PublishOnUIThread(new InputEvent(Input.Trim()));
+            Input = "";
             HideInputBox();
+        }
+
+        public async void CancelInput()
+        {
+            Input = "";
+            await HideInputBox();
+            TrafficControl.RestartIfNeeded();
         }
 
         public void Closing(CancelEventArgs args)
@@ -103,21 +111,17 @@ namespace TrafficControl.ViewModels
             HideInputBox();
         }
 
-        public async void HideInputBox()
+        public async Task HideInputBox()
         {
             Opacity = 0.0;
             await Task.Delay(100);
             WindowState = WindowState.Normal;
-            Input = "";
             CompletionResults.Clear();
-            TrafficControl.RestartIfNeeded();
         }
 
         public void DisplayInputBox()
         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             TrafficControl.CheckForUpdates(false);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             InputBoxView view = (InputBoxView)GetView();
             var screenPoint = Bootstrapper.InputManager.GetMouseScreenPosition(view);
             view.Left = screenPoint.X;
@@ -141,7 +145,7 @@ namespace TrafficControl.ViewModels
             }
         }
 
-        public async void Loaded()
+        public void Loaded()
         {
             WindowsUtils.HideFromTaskSwitcher((Window)GetView());
         }
