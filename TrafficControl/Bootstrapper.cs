@@ -2,10 +2,8 @@
 using CefSharp;
 using CefSharp.Wpf;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using TrafficControl.Input;
@@ -24,13 +22,14 @@ namespace TrafficControl
 
         public Bootstrapper()
         {
-            var cache = System.IO.Path.Combine(Environment.GetFolderPath (Environment.SpecialFolder.ApplicationData), System.IO.Path.Combine("TrafficControl","cache"));
-            if (!System.IO.Directory.Exists(cache))
+            var cache = Path.Combine(Environment.GetFolderPath (Environment.SpecialFolder.ApplicationData), System.IO.Path.Combine("TrafficControl","cache"));
+            if (!Directory.Exists(cache))
             {
-                System.IO.Directory.CreateDirectory(cache);
+                Directory.CreateDirectory(cache);
             }
 
             var settings = new CefSettings() { CachePath = cache };
+            settings.CefCommandLineArgs.Add("autoplay-policy", "no-user-gesture-required");
             Cef.Initialize(settings);
 
             Initialize();
@@ -68,9 +67,39 @@ namespace TrafficControl
             };
         }
 
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            Cef.ShutdownWithoutChecks();
+
+            WindowsUtils.HideNotification();
+
+            var processes = Process.GetProcesses();
+            var currentProcess = Process.GetCurrentProcess();
+            foreach (var process in processes)
+            {
+                if (process != currentProcess) {
+                    try
+                    {
+                        if (Path.GetDirectoryName(process.MainModule.FileName) == Path.GetDirectoryName(currentProcess.MainModule.FileName))
+                        {
+                                process.Kill();
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+
+            base.OnExit(sender, e);
+        }
+
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<InputBoxViewModel>();
+        }
+
+        public void ShowHelp()
+        {
+            DisplayRootViewFor<HelpViewModel>();
         }
     }
 }

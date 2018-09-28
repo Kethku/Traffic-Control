@@ -17,6 +17,7 @@
         Top="{Binding Top}"
         WindowState="{Binding WindowState}"
         cal:Message.Attach="
+            [Event Loaded] = [Action Loaded];
             [Event Closing] = [Action Closing($eventArgs)];
             [Event Deactivated] = [Action HideInputBox]">
     <StackPanel>

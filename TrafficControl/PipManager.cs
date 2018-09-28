@@ -42,6 +42,8 @@ namespace TrafficControl
             if (message.Input.StartsWith(PipCommandPrefix))
             {
                 var url = message.Input.Substring(PipCommandPrefix.Length);
+                var aspectRatio = 16.0 / 9.0;
+                var initScript = "";
 
                 var youtubeMatch = YoutubeRegex.Match(message.Input);
                 if (youtubeMatch.Success)
@@ -54,14 +56,17 @@ namespace TrafficControl
                 {
                     Pip.Close();
                 }
-                Pip = new PipViewModel(url);
+                Pip = new PipViewModel(url, aspectRatio, initScript);
                 Bootstrapper.WindowManager.ShowWindow(Pip);
             }
 
             if (message.Input == PipCloseCommand)
             {
-                Pip.Close();
-                Pip = null;
+                if (Pip != null)
+                {
+                    Pip.Close();
+                    Pip = null;
+                }
             }
         }
     }

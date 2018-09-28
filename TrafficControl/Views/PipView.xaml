@@ -11,10 +11,15 @@
         Background="Transparent"
         AllowsTransparency="True"
         ShowInTaskbar="False"
-        Title="PipView" Height="450" Width="800"
+        Title="PipView"
         Topmost="true"
         Left="{Binding WindowLeft, Mode=TwoWay}"
-        Top="{Binding WindowTop, Mode=TwoWay}">
+        Top="{Binding WindowTop, Mode=TwoWay}"
+        Width="{Binding WindowWidth, Mode=TwoWay}"
+        Height="{Binding WindowHeight, Mode=TwoWay}"
+        cal:Message.Attach="
+            [Event Loaded] = [Action Loaded];
+            [Event Closing] = [Action Closing]">
     <WindowChrome.WindowChrome>
         <WindowChrome     
             CaptionHeight="1"  
@@ -31,6 +36,7 @@
         </RadialGradientBrush>
     </Window.OpacityMask>
     <cef:ChromiumWebBrowser 
+        x:Name="Browser"
         Address="{Binding Address}" 
         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
         ScrollViewer.VerticalScrollBarVisibility="Hidden"/>

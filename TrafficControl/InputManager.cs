@@ -7,9 +7,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
+using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
+using Screen = System.Windows.Forms.Screen;
 
 namespace TrafficControl
 {
@@ -28,11 +29,30 @@ namespace TrafficControl
         {
             while (true)
             {
-                var mousePoint = System.Windows.Forms.Control.MousePosition;
-                MousePreviousPosition = MousePosition;
-                MousePosition = new Point(mousePoint.X, mousePoint.Y);
-                Bootstrapper.EventAggregator.PublishOnUIThread(new MouseEvent());
-                Thread.Sleep(16);
+                try
+                {
+                    var mousePoint = Control.MousePosition;
+                    MousePreviousPosition = MousePosition;
+                    MousePosition = new Point(mousePoint.X, mousePoint.Y);
+                    Bootstrapper.EventAggregator.PublishOnUIThread(new MouseEvent());
+                    Thread.Sleep(16);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
+            }
+        }
+
+        public IEnumerable<Rect> GetScreenSizes(Window view)
+        {
+            var transform = GetTransform(view);
+            foreach (var screen in Screen.AllScreens)
+            {
+                var topLeft = transform.Transform(new Point(screen.Bounds.Left, screen.Bounds.Top));
+                var bottomRight = transform.Transform(new Point(screen.Bounds.Right, screen.Bounds.Bottom));
+
+                yield return new Rect(topLeft, bottomRight);
             }
         }
 

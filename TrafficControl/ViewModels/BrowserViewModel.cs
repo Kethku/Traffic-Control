@@ -26,10 +26,29 @@ namespace TrafficControl.ViewModels
         }
         public string AddressInput { get; set; }
 
+        public async void Loaded()
+        {
+            var view = (BrowserView)GetView();
+            await Task.Delay(500);
+            view.AddressInput.Focus();
+        }
+
         public void NavigateTo()
         {
             var view = (BrowserView)GetView();
-            view.Cef.Load(AddressInput);
+            view.Browser.Load(AddressInput);
+        }
+
+        public void Closing()
+        {
+            var view = (BrowserView)GetView();
+            view.Browser.Dispose();
+        }
+
+        public void Exit()
+        {
+            var view = (BrowserView)GetView();
+            view.Close();
         }
     }
 }

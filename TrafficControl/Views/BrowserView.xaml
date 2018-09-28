@@ -7,7 +7,11 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="Simple Browser" Height="450" Width="800"
-        Background="Gray">
+        Background="Gray"
+        cal:Message.Attach="
+            [Event Loaded] = [Action Loaded];
+            [Key Escape] = [Action Exit];
+            [Event Closing] = [Action Closing]">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -25,7 +29,7 @@
             Margin="2"
             cal:Message.Attach="[Key Enter] = [Action NavigateTo]"/>
         <cef:ChromiumWebBrowser 
-            x:Name="Cef" 
+            x:Name="Browser" 
             Grid.Row="1" 
             Grid.Column="0"  
             Grid.ColumnSpan="2"

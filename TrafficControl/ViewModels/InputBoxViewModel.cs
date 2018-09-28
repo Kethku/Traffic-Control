@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 using TrafficControl.Views;
 
 namespace TrafficControl.ViewModels
@@ -25,7 +24,7 @@ namespace TrafficControl.ViewModels
 
         public InputBoxViewModel()
         {
-            HotkeyManager.Current.AddOrReplace("DisplayInputBox", Key.Space, ModifierKeys.Control, DisplayInputBox);
+            HotkeyManager.Current.AddOrReplace("DisplayInputBox", Key.Space, ModifierKeys.Control, (_, __) => DisplayInputBox());
             CompletionResults = new BindableCollection<CompletionResultViewModel>();
             Bootstrapper.EventAggregator.Subscribe(this);
         }
@@ -113,8 +112,9 @@ namespace TrafficControl.ViewModels
             CompletionResults.Clear();
         }
 
-        public void DisplayInputBox(object sender, NHotkey.HotkeyEventArgs args)
+        public async void DisplayInputBox()
         {
+            await TrafficControl.CheckForUpdates();
             InputBoxView view = (InputBoxView)GetView();
             var screenPoint = Bootstrapper.InputManager.GetMouseScreenPosition(view);
             view.Left = screenPoint.X;
@@ -124,6 +124,7 @@ namespace TrafficControl.ViewModels
             view.Show();
             view.Activate();
             view.Input.Focus();
+            CompletionResults.Clear();
             Bootstrapper.EventAggregator.PublishOnUIThread(new ProduceCompletionsEvent(""));
         }
 
@@ -137,29 +138,19 @@ namespace TrafficControl.ViewModels
             }
         }
 
+        public async void Loaded()
+        {
+            WindowsUtils.HideFromTaskSwitcher((Window)GetView());
+            await Task.Delay(100);
+            DisplayInputBox();
+        }
+
         public void Handle(CompletionResultViewModel message)
         {
-            CompletionResults.Add(message);
-        }
-    }
-
-    public class ProduceCompletionsEvent
-    {
-        public string Prefix { get; }
-
-        public ProduceCompletionsEvent(string prefix)
-        {
-            Prefix = prefix;
-        }
-    }
-
-    public class InputEvent
-    {
-        public string Input { get; }
-
-        public InputEvent(string input)
-        {
-            Input = input;
+            if (CompletionResults.Count < 15)
+            {
+                CompletionResults.Add(message);
+            }
         }
     }
 }
