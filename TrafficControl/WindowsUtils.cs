@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
 
+using Application = System.Windows.Application;
+
 namespace TrafficControl
 {
     public static class WindowsUtils
@@ -25,25 +27,40 @@ namespace TrafficControl
             SetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
         }
 
+        public static void SetupNotificationIcon()
+        {
+            notifyIcon = new NotifyIcon();
+            notifyIcon.Icon = SystemIcons.Application;
+            notifyIcon.Visible = true;
+
+            var contextMenu = new ContextMenu();
+            var quitMenuItem = new MenuItem();
+            var helpMenuItem = new MenuItem();
+
+            contextMenu.MenuItems.Add(quitMenuItem);
+            quitMenuItem.Index = 0;
+            quitMenuItem.Text = "Quit";
+            quitMenuItem.Click += (_, __) => Application.Current.Shutdown();
+
+            contextMenu.MenuItems.Add(helpMenuItem);
+            helpMenuItem.Index = 1;
+            helpMenuItem.Text = "Show Help";
+            helpMenuItem.Click += (_, __) => TrafficControl.Bootstrapper.ShowHelp();
+
+            notifyIcon.ContextMenu = contextMenu;
+            notifyIcon.DoubleClick += (_, __) => TrafficControl.Bootstrapper.ShowHelp();
+        }
+
         public static void ShowNotification(string title, string body)
         {
-            if (notifyIcon == null)
-            {
-                notifyIcon = new NotifyIcon();
-                notifyIcon.Icon = SystemIcons.Application;
-            }
             notifyIcon.BalloonTipTitle = title;
             notifyIcon.BalloonTipText = body;
-            notifyIcon.Visible = true;
             notifyIcon.ShowBalloonTip(10000);
         }
 
-        public static void HideNotification()
+        public static void HideNotificationIcon()
         {
-            if (notifyIcon != null)
-            {
-                notifyIcon.Visible = false;
-            }
+            notifyIcon.Visible = false;
         }
 
         [Flags]

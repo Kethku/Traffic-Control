@@ -71,7 +71,7 @@ namespace TrafficControl
         {
             Cef.ShutdownWithoutChecks();
 
-            WindowsUtils.HideNotification();
+            WindowsUtils.HideNotificationIcon();
 
             var processes = Process.GetProcesses();
             var currentProcess = Process.GetCurrentProcess();
@@ -95,6 +95,7 @@ namespace TrafficControl
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<InputBoxViewModel>();
+            WindowsUtils.ShowNotification("Traffic Control Running", "Press Control+Space to bring up the input box");
         }
 
         public void ShowHelp()

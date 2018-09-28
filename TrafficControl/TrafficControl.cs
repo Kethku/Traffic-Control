@@ -28,6 +28,8 @@ namespace TrafficControl
 
         public static Bootstrapper Bootstrapper { get; set; }
 
+        public static bool NeedsRestarted { get; set; }
+
         private static Mutex singleAppMutex;
         private static bool firstRun = false;
 
@@ -42,7 +44,9 @@ namespace TrafficControl
 
                 SetupSquirrel();
 
-                CheckForUpdates().Wait();
+                WindowsUtils.SetupNotificationIcon();
+
+                CheckForUpdates(true).Wait();
 
                 var app = new TrafficControl();
                 app.Startup += OnStartup;
@@ -64,7 +68,7 @@ namespace TrafficControl
             }
         }
 
-        public static async Task SetupSquirrel()
+        public static async void SetupSquirrel()
         {
             if (!Debugger.IsAttached) {
                 using (var updateManager = await UpdateManager.GitHubUpdateManager(GithubUrl))
@@ -87,7 +91,7 @@ namespace TrafficControl
             }
         }
 
-        public static async Task CheckForUpdates()
+        public static async Task CheckForUpdates(bool restartIfNeeded)
         {
             if (!Debugger.IsAttached) {
                 ReleaseEntry release = null;
@@ -96,11 +100,33 @@ namespace TrafficControl
                     var updateInfo = await updateManager.CheckForUpdate();
                     if (updateInfo.ReleasesToApply.Any())
                     {
-                        WindowsUtils.ShowNotification("Traffic Control Updating", "Traffic Control is updating and will be available shortly");
+                        WindowsUtils.ShowNotification("Traffic Control Updating", "Traffic Control is updating and will be restart shortly");
                         release = await updateManager.UpdateApp();
                     }
                 }
                 if (release != null)
+                {
+                    if (restartIfNeeded)
+                    {
+                        UpdateManager.RestartApp();
+                    }
+                    else
+                    {
+                        NeedsRestarted = true;
+                    }
+                }
+                else
+                {
+                    NeedsRestarted = false;
+                }
+            }
+        }
+
+        public static async void RestartIfNeeded()
+        {
+            if (NeedsRestarted)
+            {
+                using (var updateManager = await UpdateManager.GitHubUpdateManager(GithubUrl))
                 {
                     UpdateManager.RestartApp();
                 }

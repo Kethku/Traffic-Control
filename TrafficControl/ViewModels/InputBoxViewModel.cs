@@ -110,11 +110,14 @@ namespace TrafficControl.ViewModels
             WindowState = WindowState.Normal;
             Input = "";
             CompletionResults.Clear();
+            TrafficControl.RestartIfNeeded();
         }
 
-        public async void DisplayInputBox()
+        public void DisplayInputBox()
         {
-            await TrafficControl.CheckForUpdates();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            TrafficControl.CheckForUpdates(false);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             InputBoxView view = (InputBoxView)GetView();
             var screenPoint = Bootstrapper.InputManager.GetMouseScreenPosition(view);
             view.Left = screenPoint.X;
@@ -141,8 +144,6 @@ namespace TrafficControl.ViewModels
         public async void Loaded()
         {
             WindowsUtils.HideFromTaskSwitcher((Window)GetView());
-            await Task.Delay(100);
-            DisplayInputBox();
         }
 
         public void Handle(CompletionResultViewModel message)
