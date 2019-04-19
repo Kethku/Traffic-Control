@@ -62,6 +62,7 @@ namespace TrafficControl
         private static void OnStartup(object sender, StartupEventArgs e)
         {
             Bootstrapper.EventAggregator.Subscribe(sender);
+
             if (FirstRun)
             {
                 Bootstrapper.ShowHelp();

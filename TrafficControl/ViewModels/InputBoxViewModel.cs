@@ -145,9 +145,14 @@ namespace TrafficControl.ViewModels
             }
         }
 
-        public void Loaded()
+        public async void Loaded()
         {
             WindowsUtils.HideFromTaskSwitcher((Window)GetView());
+            await Task.Delay(500);
+            if (UpdateFlagUtils.ReadFlagAndReset())
+            {
+                WindowsUtils.ShowNotification("Traffic Control Updated", "Traffic control has updated. Check help dialog for details.");
+            }
         }
 
         public void Handle(CompletionResultViewModel message)
