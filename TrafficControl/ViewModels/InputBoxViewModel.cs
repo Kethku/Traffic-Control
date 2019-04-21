@@ -102,7 +102,6 @@ namespace TrafficControl.ViewModels
         {
             Input = "";
             await HideInputBox();
-            TrafficControl.RestartIfNeeded();
         }
 
         public void Closing(CancelEventArgs args)
@@ -121,7 +120,6 @@ namespace TrafficControl.ViewModels
 
         public void DisplayInputBox()
         {
-            TrafficControl.CheckForUpdates(false);
             InputBoxView view = (InputBoxView)GetView();
             var screenPoint = Bootstrapper.InputManager.GetMouseScreenPosition(view);
             view.Left = screenPoint.X;

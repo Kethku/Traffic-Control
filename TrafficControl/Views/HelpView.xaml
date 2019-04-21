@@ -33,10 +33,6 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold">Pip</Label>
-            <Label Grid.Column="1" Grid.Row="0">Displays a url in an unobtrusive always on top window</Label>
-            <Label Grid.Column="0" Grid.Row="1" FontWeight="Bold">Browser</Label>
-            <Label Grid.Column="1" Grid.Row="1">Opens up a limited browser window for logging into websites</Label>
             <Label Grid.Column="0" Grid.Row="2" FontWeight="Bold">Help</Label>
             <Label Grid.Column="1" Grid.Row="2">Displays this window</Label>
             <Label Grid.Column="0" Grid.Row="3" FontWeight="Bold">Quit</Label>

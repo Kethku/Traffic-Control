@@ -1,6 +1,4 @@
 ﻿using Caliburn.Micro;
-using CefSharp;
-using CefSharp.Wpf;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -11,14 +9,12 @@ using TrafficControl.ViewModels;
 
 namespace TrafficControl
 {
-    public class Bootstrapper : BootstrapperBase
-    {
+    public class Bootstrapper : BootstrapperBase {
         public static IEventAggregator EventAggregator = new EventAggregator();
         public static IWindowManager WindowManager = new WindowManager();
         public static InputManager InputManager = new InputManager();
 
-        public static PipManager PipManager = new PipManager();
-        public static BrowserManager BrowserManager = new BrowserManager();
+        public static SniperManager SniperManager = new SniperManager();
 
         public Bootstrapper()
         {
@@ -27,10 +23,6 @@ namespace TrafficControl
             {
                 Directory.CreateDirectory(cache);
             }
-
-            var settings = new CefSettings() { CachePath = cache };
-            settings.CefCommandLineArgs.Add("autoplay-policy", "no-user-gesture-required");
-            Cef.Initialize(settings);
 
             Initialize();
         }
@@ -69,8 +61,6 @@ namespace TrafficControl
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            Cef.ShutdownWithoutChecks();
-
             WindowsUtils.HideNotificationIcon();
 
             var processes = Process.GetProcesses();

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Caliburn.Micro;
-using Squirrel;
 using TrafficControl.ViewModels;
 
 using Application = System.Windows.Application;
@@ -21,33 +20,18 @@ namespace TrafficControl
     public class TrafficControl : Application, IHandle<ProduceCompletionsEvent>, IHandle<InputEvent>
     {
         public const string AppName = "TrafficControl";
-        public const string UpdateUrl = "http://02credits.ddns.net/traffic-control";
 
         public const string QuitCommand = "quit";
         public const string HelpCommand = "help";
 
         public static Bootstrapper Bootstrapper { get; set; }
-
-        public static bool NeedsRestarted { get; set; }
         public static bool FirstRun { get; set; }
-
-        private static Mutex singleAppMutex;
 
         [STAThread]
         public static void Main()
         {
             try
             {
-                bool newApp;
-                singleAppMutex = new Mutex(true, AppName, out newApp);
-                if (!newApp) return;
-
-                SetupSquirrel();
-
-                WindowsUtils.SetupNotificationIcon();
-
-                CheckForUpdates(true).Wait();
-
                 var app = new TrafficControl();
                 app.Startup += OnStartup;
                 Bootstrapper = new Bootstrapper();
@@ -66,69 +50,6 @@ namespace TrafficControl
             if (FirstRun)
             {
                 Bootstrapper.ShowHelp();
-            }
-        }
-
-        public static void SetupSquirrel()
-        {
-            if (!Debugger.IsAttached) {
-                using (var updateManager = new UpdateManager(UpdateUrl))
-                {
-                    SquirrelAwareApp.HandleEvents(
-                      onInitialInstall: v =>
-                      {
-                          updateManager.CreateShortcutForThisExe();
-                      },
-                      onAppUpdate: v => 
-                      {
-                          UpdateFlagUtils.SetUpdateFlag();
-                          updateManager.CreateShortcutForThisExe();
-                      },
-                      onAppUninstall: v => 
-                      {
-                          updateManager.RemoveShortcutForThisExe();
-                      },
-                      onFirstRun: () => FirstRun = true);
-                }
-            }
-        }
-
-        public static async Task CheckForUpdates(bool restartIfNeeded)
-        {
-            if (!Debugger.IsAttached) {
-                ReleaseEntry release = null;
-                using (var updateManager = new UpdateManager(UpdateUrl))
-                {
-                    var updateInfo = await updateManager.CheckForUpdate();
-                    if (updateInfo.ReleasesToApply.Any())
-                    {
-                        WindowsUtils.ShowNotification("Traffic Control Updating", "Traffic Control is updating and will restart when finished.");
-                        release = await updateManager.UpdateApp();
-                    }
-                }
-                if (release != null)
-                {
-                    if (restartIfNeeded)
-                    {
-                        UpdateManager.RestartApp();
-                    }
-                    else
-                    {
-                        NeedsRestarted = true;
-                    }
-                }
-            }
-        }
-
-        public static async void RestartIfNeeded()
-        {
-            if (NeedsRestarted)
-            {
-                using (var updateManager = new UpdateManager(UpdateUrl))
-                {
-                    await UpdateManager.RestartAppWhenExited();
-                    Current.Shutdown();
-                }
             }
         }
 
