@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Caliburn.Micro;
+using TrafficControl.ViewModels;
 
 namespace TrafficControl {
     public class SniperManager : IHandle<ProduceCompletionsEvent>, IHandle<InputEvent> {
