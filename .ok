@@ -1,3 +1,0 @@
-package: scriptcs scripts/updateVersion.csx; rm *.nupkg; nuget pack
-releasify: $pkg = scriptcs scripts/latestPackageName.csx; start-process -FilePath ".\packages\squirrel.windows.1.9.0\tools\Squirrel.exe" -ArgumentList "--releasify $pkg -g .\loading.gif" -PassThru -Wait | out-null
-publish: ok package; ok releasify
